@@ -1,18 +1,20 @@
-<div align="center">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/svg/capwall-logo-dark.svg">
+    <img src="docs/brand/svg/capwall-logo-light.svg" alt="Capwall" width="320">
+  </picture>
+</p>
 
-# 🧱 Capwall
+<h3 align="center">The open-source engine behind <a href="https://github.com/Extodan/Capwall">Capwall</a> — zero-trust runtime permissions for Node.js, AI agents and MCP servers</h3>
 
-**Zero-Trust Runtime Dependency Firewall (`Mir RWXi`), AI Agent Reference Monitor & Cryptographic RBOM Engine for Node.js**
+<p align="center">
+  <a href="https://www.npmjs.com/package/@extodan/capwall"><img src="https://img.shields.io/npm/v/@extodan/capwall?color=10B981" alt="npm version"></a>
+  <img src="https://img.shields.io/badge/Latency-%3C0.05ms-10B981" alt="latency">
+  <img src="https://img.shields.io/badge/Spec-Mir_%2B_in--toto-8B5CF6" alt="spec">
+  <img src="https://img.shields.io/badge/License-Apache_2.0-blue" alt="license">
+</p>
 
-<a href="https://www.npmjs.com/package/@extodan/capwall"><img src="https://img.shields.io/npm/v/@extodan/capwall?color=10B981" alt="npm version"></a>
-<img src="https://img.shields.io/badge/Latency-%3C0.05ms-10B981" alt="latency">
-<img src="https://img.shields.io/badge/Spec-Mir_%2B_in--toto-8B5CF6" alt="spec">
-<img src="https://img.shields.io/badge/License-Apache_2.0-blue" alt="license">
-
-**Why does a string-padding package have permission to read your `STRIPE_SECRET_KEY`?**
-72.9% of npm packages require zero system capabilities — yet 100% run with full ambient authority.
-
-</div>
+<p align="center"><strong>72.9%</strong> of npm packages need zero system capabilities —<br>yet <strong>100%</strong> run with full access to your secrets, your shell, and your network.</p>
 
 ## 30-Second Quickstart
 
