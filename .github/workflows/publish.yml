@@ -1,0 +1,50 @@
+name: publish
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm, registry-url: https://registry.npmjs.org }
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test
+      - run: pnpm e2e
+
+      # Tag must match the version being published (e.g. v0.2.0 → all packages at 0.2.0)
+      - name: Verify tag matches package versions
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          for p in packages/*/package.json; do
+            V=$(python3 -c "import json;print(json.load(open('$p'))['version'])")
+            if [ "$V" != "$TAG" ]; then
+              echo "::error::$p is at $V but tag is $TAG — all packages must be at the same version"
+              exit 1
+            fi
+          done
+
+      - name: Publish (dependency order, with provenance)
+        run: |
+          for p in core scanner attestation agent-shield runtime-node cli exploit-sim-lab; do
+            (cd packages/$p && pnpm publish --access public --no-git-checks) || exit 1
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        run: |
+          gh release create "${GITHUB_REF#refs/tags/}" --title "${GITHUB_REF#refs/tags/}" \
+            --notes "Published to npm. Verify: \`npm view @extodan/capwall version\`" \
+            --prerelease=false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

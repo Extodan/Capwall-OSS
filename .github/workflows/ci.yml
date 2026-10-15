@@ -25,3 +25,5 @@ jobs:
           node ../../packages/cli/dist/cli.mjs attest emit-all
           node ../../packages/cli/dist/cli.mjs attest verify
       - run: bash scripts/smoke-packed.sh
+      - name: 5-attack demo
+        run: cd examples/zero-day-hijack-demo && npm run demo:attack
