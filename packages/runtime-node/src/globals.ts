@@ -16,6 +16,15 @@ export function installEnvGuard(ctx: CheckContext): void {
     if (!pkg) return // host code — unrestricted
     const action = checkCapability(ctx, pkg, capability, 'runtime', `process.env.${name}`, currentStack())
     if (action === 'block') throw new CapabilityDeniedError(pkg, capability, `process.env.${name}`)
+    // scoped predicate: granted env.read but var outside scopes.env → block
+    if (capability === 'env.read' && action === 'allow' && !ctx.policy.envPermitted(pkg, name)) {
+      ctx.reporter.violation({
+        pkg, capability, kind: 'runtime',
+        detail: `process.env.${name} outside scoped grant`,
+        stack: currentStack(), blocked: true,
+      })
+      throw new CapabilityDeniedError(pkg, capability, `process.env.${name} (outside scoped grant; allowed: ${(ctx.policy.scopesFor(pkg).env ?? []).join(', ') || 'unlisted'})`)
+    }
   }
 
   const proxy = new Proxy(realEnv, {
@@ -78,6 +87,13 @@ export function installFetchGuard(ctx: CheckContext): void {
         )
         if (action === 'block') {
           throw new CapabilityDeniedError(pkg, 'http.request', `fetch(${host ?? '…'})`)
+        }
+        if (action === 'allow' && host && !ctx.policy.hostPermitted(pkg, host)) {
+          ctx.reporter.violation({
+            pkg, capability: 'http.request', kind: 'runtime',
+            detail: `fetch(${host}) outside scoped grant`, stack: currentStack(), blocked: true,
+          })
+          throw new CapabilityDeniedError(pkg, 'http.request', `fetch(${host}) — host outside scoped grant`)
         }
       }
     }

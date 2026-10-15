@@ -15,10 +15,10 @@ per-package runtime permissions for `node_modules`, AI agents, and MCP servers.
 > `net.*`, `fs.*`, `dynamic-code`, …) scanned statically, locked in a reviewed
 > `capabilities.lock`, and enforced fail-closed inside V8 before userland runs.
 
-```
-npx @extodan/capwall init              # scan node_modules → capabilities.lock
-capwall deny some-pkg child_process# revoke what you don't trust
-capwall run -- node app.js         # enforce — unauthorized use throws
+```bash
+npx @extodan/capwall init                 # scan node_modules → least-privilege capabilities.lock
+npx @extodan/capwall run -- node dist/server.js   # enforce: unauthorized .env/net/fs/exec is blocked
+npx @extodan/capwall wrap -- claude        # AI agents + MCP under the DIFC reference monitor
 ```
 
 ## This repository

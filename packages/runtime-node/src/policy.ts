@@ -2,7 +2,10 @@ import { existsSync, readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { dirname, join, parse } from 'node:path'
 import {
+  entryScopes,
   grantedCapabilities,
+  hostAllowed,
+  envAllowed,
   isRecognized,
   parseLock,
   type Capability,
@@ -101,6 +104,20 @@ export class Policy {
   grantsFor(pkg: { name: string; version?: string }): string[] {
     if (!this.lock) return []
     return grantedCapabilities(this.lock, pkg.name, pkg.version)
+  }
+
+  /** Scoped argument predicates for a package (undefined list = unscoped). */
+  scopesFor(pkg: { name: string; version?: string }): { env?: string[]; hosts?: string[] } {
+    if (!this.lock) return {}
+    return entryScopes(this.lock, pkg.name, pkg.version)
+  }
+
+  envPermitted(pkg: { name: string; version?: string }, varName: string): boolean {
+    return envAllowed(varName, this.scopesFor(pkg).env)
+  }
+
+  hostPermitted(pkg: { name: string; version?: string }, host: string): boolean {
+    return hostAllowed(host, this.scopesFor(pkg).hosts)
   }
 
   isRecognized(pkg: { name: string; version?: string }): boolean {

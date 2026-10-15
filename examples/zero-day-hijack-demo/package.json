@@ -1,0 +1,11 @@
+{
+  "name": "zero-day-hijack-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One command. Four real attack vectors. Watch a hijacked dependency get walled.",
+  "scripts": {
+    "test:attack": "node run.js attack",
+    "test:capwall": "node run.js capwall"
+  },
+  "dependencies": { "evil-color-logger": "file:./node_modules/evil-color-logger" }
+}

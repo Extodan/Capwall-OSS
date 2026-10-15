@@ -10,6 +10,17 @@ export type UnrecognizedMode = z.infer<typeof UnrecognizedMode>
 
 const PackageEntry = z.object({
   capabilities: z.array(z.string()),
+  /**
+   * Scoped grants (argument predicates): env: ["NODE_ENV"] → may read only
+   * those variables; hosts: ["api.stripe.com"] → may call only those hosts
+   * (subdomains included). Absent = unscoped (any var / any host).
+   */
+  scopes: z
+    .object({
+      env: z.array(z.string()).optional(),
+      hosts: z.array(z.string()).optional(),
+    })
+    .optional(),
   /** Authorized import set (NodeShield lateral-import graph). */
   deps: z.array(z.string()).optional(),
   /** Override the global failure mode for this package. */
@@ -95,6 +106,24 @@ export function lookupEntry(lock: LockFile, name: string, version?: string): Pac
 export function grantedCapabilities(lock: LockFile, name: string, version?: string): Capability[] {
   const entry = lookupEntry(lock, name, version)
   return (entry?.capabilities ?? []).filter(isCapability)
+}
+
+/** Scoped argument predicates: undefined/absent = unscoped (allow all). */
+export function entryScopes(lock: LockFile, name: string, version?: string): { env?: string[]; hosts?: string[] } {
+  const entry = lookupEntry(lock, name, version)
+  return entry?.scopes ?? {}
+}
+
+/** host match: exact or subdomain suffix ("api.stripe.com" allows eu.api.stripe.com) */
+export function hostAllowed(host: string, allowed?: string[]): boolean {
+  if (!allowed || allowed.length === 0) return true
+  return allowed.some((a) => host === a || host.endsWith(`.${a}`))
+}
+
+/** env var match (case-sensitive names) */
+export function envAllowed(name: string, allowed?: string[]): boolean {
+  if (!allowed || allowed.length === 0) return true
+  return allowed.includes(name)
 }
 
 export function isRecognized(lock: LockFile, name: string, version?: string): boolean {

@@ -1,6 +1,6 @@
 {
   "name": "@extodan/capwall-runtime-node",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node.js --import runtime hook: intercepts and blocks unauthorized process.env, child_process, fs and outbound net/http usage per package, per capabilities.lock.",
   "type": "module",
   "license": "Apache-2.0",
