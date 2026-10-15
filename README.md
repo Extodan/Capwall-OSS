@@ -1,78 +1,70 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/svg/capwall-logo-dark.svg">
-    <img src="docs/brand/svg/capwall-logo-light.svg" alt="Capwall" width="360">
-  </picture>
-</p>
+<div align="center">
 
-# Capwall OSS
+# 🧱 Capwall
 
-The open-source engine behind [Capwall](https://github.com/Extodan/Capwall) —
-per-package runtime permissions for `node_modules`, AI agents, and MCP servers.
+**Zero-Trust Runtime Dependency Firewall (`Mir RWXi`), AI Agent Reference Monitor & Cryptographic RBOM Engine for Node.js**
 
-> Your app imports 1,000+ packages you've never read. Capwall makes each one
-> ask permission: **12 capabilities** (`env.read`, `child_process`, `http.request`,
-> `net.*`, `fs.*`, `dynamic-code`, …) scanned statically, locked in a reviewed
-> `capabilities.lock`, and enforced fail-closed inside V8 before userland runs.
+<a href="https://www.npmjs.com/package/@extodan/capwall"><img src="https://img.shields.io/npm/v/@extodan/capwall?color=10B981" alt="npm version"></a>
+<img src="https://img.shields.io/badge/Latency-%3C0.05ms-10B981" alt="latency">
+<img src="https://img.shields.io/badge/Spec-Mir_%2B_in--toto-8B5CF6" alt="spec">
+<img src="https://img.shields.io/badge/License-Apache_2.0-blue" alt="license">
 
-```bash
-npx @extodan/capwall init                 # scan node_modules → least-privilege capabilities.lock
-npx @extodan/capwall run -- node dist/server.js   # enforce: unauthorized .env/net/fs/exec is blocked
-npx @extodan/capwall wrap -- claude        # AI agents + MCP under the DIFC reference monitor
-```
+**Why does a string-padding package have permission to read your `STRIPE_SECRET_KEY`?**
+72.9% of npm packages require zero system capabilities — yet 100% run with full ambient authority.
 
-Why does a string-padding package have permission to read your `STRIPE_SECRET_KEY`?
-**72.9% of npm packages require zero system capabilities** (Xu & Møller, ASE 2026) —
-yet 100% of them run with full ambient authority. Capwall fixes the mismatch.
+</div>
 
-See it stop five real attack vectors in one command:
+## 30-Second Quickstart
 
 ```bash
-npm run demo:attack   # from the repo root: hijacked dep + poisoned MCP tools, all BLOCKED
+# 1. Scan your node_modules & generate a least-privilege capabilities.lock
+npx @extodan/capwall init
+
+# 2. Run your app under the V8 capability membrane (blocks unauthorized .env/net/fs/exec)
+npx @extodan/capwall run -- node dist/server.js
+
+# 3. Wrap Claude Code / Cursor / MCP servers in the DIFC Reference Monitor
+npx @extodan/capwall wrap -- claude
 ```
+
+## See it stop five attacks
+
+```bash
+cd examples/zero-day-hijack-demo && npm run demo:attack
+```
+
+```
+│ 1  direct secret theft (process.env.STRIPE_SECRET_KEY)   │ BLOCKED │ env.read
+│ 2  async-context evasion (setTimeout → fetch exfil)      │ BLOCKED │ http.request
+│ 3  GHunter prototype gadget (Object.prototype.shell)     │ BLOCKED │ hardening
+│ 4  NodeShield lateral import (child_process)             │ BLOCKED │ import edge
+│ 5  MCP-ITP poisoned tools/list (~/.ssh coercion)         │ BLOCKED │ ITP scan
+```
+
+## What it is
 
 | module | ground truth |
 |---|---|
-| `runtime-node` enforcement | **Mir** RWXi (MIT CSAIL) · **GHunter** gadgets (USENIX'24) · **NodeShield** import edges (CCS'25) |
-| `scanner` dataflow | **Defensive Capability Analysis** (ASE'26) |
-| `agent-shield` | Runtime Contracts (arXiv:2608.11274) · **VIGIL/AgentSpec** · **MCP-ITP** · **FIDES**/SPA |
-| `attestation` | **in-toto** (USENIX'19) + DSSE · zkSBOM commitments
+| `runtime-node` — `node --import` V8 hook | **Mir** RWXi (MIT CSAIL, CCS'21) · **GHunter** gadget isolation (USENIX'24) · **NodeShield** import edges (CCS'25) |
+| `scanner` — AST + dataflow analysis | **Defensive Capability Analysis** (ASE'26) — capability-root escape tracking, base64 de-obfuscation, cross-file taint |
+| `agent-shield` — DIFC reference monitor | **Runtime Contracts** (arXiv:2608.11274) · **VIGIL/AgentSpec** · **MCP-ITP** · **FIDES** selective information hiding |
+| `attestation` — in-toto + DSSE + zkSBOM | **in-toto** (USENIX'19) · Ed25519 signed supply-chain proofs · zero-knowledge set commitments |
+| `cli` — `scan · init · verify · run · wrap · mcp · taint · attest · sbom` | 12 capabilities, scoped predicates (`env:["STRIPE_KEY"]`, `hosts:["api.stripe.com"]`), audit→enforce rollout |
 
-## This repository
+## Try it on a repo right now
 
-| package | role |
-|---|---|
-| `@extodan/capwall-core` | capability model, `capabilities.lock` schema (zod + JSON-schema), risk scoring |
-| `@extodan/capwall-scanner` | acorn AST + capability dataflow: local trees, registry tarballs, GitHub manifests — nothing executes |
-| `@extodan/capwall-runtime-node` | `--import` enforcement: ESM resolve gating, CJS `Module._load` patch, env/fetch membranes, GHunter gadget sanitizer, primordials freezing, first-loader guarantee |
-| `@extodan/capwall-attestation` | in-toto v1.0 Layout/Link + DSSE Ed25519, artifact rules, supply-chain verifier, zkSBOM commitments |
-| `@extodan/capwall-agent-shield` | two-axis DIFC taint lattice, MCP schema pinning, implicit-tool-poisoning detector, evidential contracts |
-| `@extodan/capwall` | `scan · init · verify · run · wrap · mcp · taint · attest · sbom` |
-| `@extodan/capwall-exploit-sim-lab` | air-gapped lab reproducing three 2026 attack patterns; split-screen pwned-vs-blocked table (`pnpm sim:demo`) |
+Point the free scanner at `github.com/Extodan/Capwall-OSS/tree/main/examples/risky-app` — eight popular packages (ssh2, esbuild, cross-spawn…), every stat honestly non-zero. Or try `examples/compromised-app` — pinned real incident versions, and a lesson in what npm already purged.
 
-## Try it in 60 seconds
+## Develop
 
 ```bash
-pnpm install && pnpm build && pnpm test   # 160+ tests
-pnpm e2e                                  # live blocking, tamper rejection, registry scan
-pnpm sim:demo                             # the launch-video demo table
+pnpm install && pnpm build && pnpm test    # 150+ tests
+pnpm e2e                                   # live blocking, tamper rejection, registry scan
+pnpm sim:demo                              # split-screen: pwned vs blocked, 3 attack patterns
 ```
-
-Scan targets you can point any Capwall scanner at:
-
-- `github.com/Extodan/Capwall-OSS/tree/main/examples/risky-app` — every stat non-zero (legit packages: ssh2, esbuild, cross-spawn…)
-- `github.com/Extodan/Capwall-OSS/tree/main/examples/compromised-app` — pinned real incident versions (and an honest lesson in what npm already purged)
 
 ## Honest boundaries
 
-The runtime is a capability **gate**, not a cryptographic sandbox: it stops the
-standard attack paths (builtin imports, env reads, fetch exfil, prototype
-gadgets) at the module boundary and refuses to promise enforcement when it
-can't prove it loaded first. Full details in each package's README.
+A capability **gate**, not a cryptographic sandbox: it stops the standard attack paths at the module boundary (env reads, exfil, prototype gadgets, lateral imports), refuses to promise enforcement when it can't prove it loaded first, and says so loudly.
 
-## Contributing
-
-Small PRs welcome — CI runs `build → test → e2e → attest-verify → packed-tarball smoke`.
-Everything ships with tests; a fix without a failing test will be asked for one.
-
-Apache-2.0 (see `LICENSE`). Node ≥ 20.6.
+Apache-2.0 · Node ≥ 20.6 · [github.com/Extodan/Capwall-OSS](https://github.com/Extodan/Capwall-OSS)
