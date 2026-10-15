@@ -15,7 +15,9 @@ done
 echo "  tarballs: $(ls "$OUT"/*.tgz | wc -l | tr -d ' ')"
 echo "── pristine npm install from tarballs"
 PROJ="$OUT/proj"; mkdir -p "$PROJ"; cd "$PROJ"; npm init -y >/dev/null
-npm install --no-audit --no-fund "$OUT"/core-*.tgz "$OUT"/scanner-*.tgz "$OUT"/runtime-node-*.tgz "$OUT"/attestation-*.tgz "$OUT"/agent-shield-*.tgz "$OUT"/cli-*.tgz >/dev/null
+TGZ=("$OUT"/*.tgz)
+echo "  installing ${#TGZ[@]} tarballs: $(basename "${TGZ[0]}") …"
+npm install --no-audit --no-fund "${TGZ[@]}" >/dev/null
 CW="$PROJ/node_modules/.bin/capwall"
 echo "── npx-equivalent CLI from packed tarball"
 APP="$OUT/app"; mkdir -p "$APP/node_modules"

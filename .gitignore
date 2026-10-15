@@ -15,5 +15,6 @@ examples/vulnerable-appnode_modules/
 !packages/scanner/test/fixtures/**/node_modules/**
 .turbo/
 .env
+.npmrc
 .env.local
 .DS_Store
