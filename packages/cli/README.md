@@ -1,6 +1,10 @@
-<div align="center">
-  <img src="docs/banner.svg" alt="capwall — your node_modules just lost root access" width="100%">
-</div>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/capwall-logo-dark.svg">
+    <img src="docs/capwall-logo-light.svg" alt="Capwall" width="360">
+  </picture>
+</p>
+<h3 align="center">your node_modules just lost root access</h3>
 
 # @extodan/capwall
 
@@ -11,6 +15,8 @@ Every `npm install` pulls in packages you've never read. Any of them can read `p
 [![CI](https://github.com/Extodan/Capwall-OSS/actions/workflows/ci.yml/badge.svg)](https://github.com/Extodan/Capwall-OSS/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/v/@extodan/capwall)](https://www.npmjs.com/package/@extodan/capwall)
+
+<p align="center"><img src="docs/banner.svg" alt="blocked attack demo" width="90%"></p>
 
 ## Quickstart (60 seconds)
 

@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/svg/capwall-logo-dark.svg">
+    <img src="docs/brand/svg/capwall-logo-light.svg" alt="Capwall" width="360">
+  </picture>
+</p>
+
 # Capwall OSS
 
 The open-source engine behind [Capwall](https://github.com/Extodan/Capwall) —

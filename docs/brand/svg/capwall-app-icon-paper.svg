@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Capwall">
+  <title>Capwall</title>
+  <rect width="512" height="512" fill="#F4F4F0"/>
+  <rect x="229.333" y="96" width="53.333" height="93.333" fill="#0B0B0F"/>
+  <rect x="229.333" y="209.333" width="53.333" height="93.333" fill="#0B0B0F"/>
+  <rect x="229.333" y="322.667" width="53.333" height="93.333" fill="#0B0B0F"/>
+  <rect x="122.667" y="136" width="66.667" height="66.667" fill="#C9CBFF"/>
+  <rect x="322.667" y="136" width="66.667" height="66.667" fill="#1A1AFF"/>
+  <rect x="149.333" y="309.333" width="66.667" height="66.667" fill="#E5341D"/>
+</svg>
