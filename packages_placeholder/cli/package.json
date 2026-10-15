@@ -1,0 +1,39 @@
+{
+  "name": "@capwall/cli",
+  "version": "0.1.0",
+  "description": "capwall \u2014 capability firewall for npm dependencies: scan, lock, enforce, attest.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": {
+    "capwall": "./dist/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "lint": "biome check src test"
+  },
+  "dependencies": {
+    "@capwall/attestation": "workspace:*",
+    "@capwall/core": "workspace:*",
+    "@capwall/runtime-node": "workspace:*",
+    "@capwall/scanner": "workspace:*",
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.1",
+    "@capwall/agent-shield": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "vitest": "^3.0.0"
+  }
+}

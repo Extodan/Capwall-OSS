@@ -1,0 +1,9 @@
+{
+  "name": "vulnerable-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Capwall demo: a dependency that tries to steal your environment, spawn processes and exfiltrate data — blocked at runtime.",
+  "dependencies": {
+    "evil-left-pad": "file:./vendor/evil-left-pad"
+  }
+}

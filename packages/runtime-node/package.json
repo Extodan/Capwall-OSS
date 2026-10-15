@@ -1,0 +1,29 @@
+{
+  "name": "@capwall/runtime-node",
+  "version": "0.1.0",
+  "description": "Node.js --import runtime hook: intercepts and blocks unauthorized process.env, child_process, fs and outbound net/http usage per package, per capabilities.lock.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./dist/register.mjs",
+    "./register": "./dist/register.mjs",
+    "./loader": "./dist/loader.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "lint": "biome check src test"
+  },
+  "dependencies": {
+    "@capwall/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "vitest": "^3.0.0"
+  }
+}

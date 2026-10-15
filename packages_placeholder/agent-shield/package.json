@@ -1,0 +1,42 @@
+{
+  "name": "@capwall/agent-shield",
+  "version": "0.1.0",
+  "description": "AI Agent & MCP Runtime Shield \u2014 dual-faced runtime contract harness, trajectory hash-chain, two-axis DIFC taint lattice, SKILL.md/MCP sanitizer.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./wrap-preload": "./dist/wrap-preload.mjs",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "lint": "biome check src test"
+  },
+  "dependencies": {
+    "@capwall/attestation": "workspace:*",
+    "@capwall/core": "workspace:*",
+    "picomatch": "^4.0.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/picomatch": "^3.0.1",
+    "tsup": "^8.3.5",
+    "vitest": "^3.0.0"
+  },
+  "bin": {
+    "capwall-mcp-shim": "./dist/mcp-shim.mjs"
+  }
+}

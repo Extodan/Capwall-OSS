@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+.firewall/
+.capwall/
+examples/vulnerable-app/node_modules/
+.turbo/
+.env
+.env.local
+.DS_Store

@@ -1,0 +1,28 @@
+name: ci
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test
+      - run: pnpm e2e
+      # run our own medicine: verify + attest the example app
+      - run: |
+          cd examples/vulnerable-app
+          mkdir -p node_modules && cp -R vendor/evil-left-pad node_modules/
+          node ../../packages/cli/dist/cli.mjs init
+          node ../../packages/cli/dist/cli.mjs verify
+          node ../../packages/cli/dist/cli.mjs keys generate
+          node ../../packages/cli/dist/cli.mjs attest layout
+          node ../../packages/cli/dist/cli.mjs attest emit-all
+          node ../../packages/cli/dist/cli.mjs attest verify
+      - run: bash scripts/smoke-packed.sh
