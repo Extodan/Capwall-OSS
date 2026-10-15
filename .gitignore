@@ -1,4 +1,5 @@
-/node_modules/
+node_modules/
+!packages/scanner/test/fixtures/**/node_modules/**
 dist/
 .next/
 out/
@@ -10,7 +11,8 @@ data/*.db-wal
 data/*.db-shm
 .firewall/
 .capwall/
-examples/vulnerable-app/node_modules/
+examples/vulnerable-appnode_modules/
+!packages/scanner/test/fixtures/**/node_modules/**
 .turbo/
 .env
 .env.local
