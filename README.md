@@ -1,43 +1,54 @@
-# Capwall
+# Capwall OSS
 
-**The capability firewall for npm dependencies — Android-style runtime permissions for `node_modules`.**
+The open-source engine behind [Capwall](https://github.com/Extodan/Capwall) —
+per-package runtime permissions for `node_modules`, AI agents, and MCP servers.
 
-Every `npm install` pulls in packages you've never read. Any of them can read `process.env`, spawn child processes, and open sockets — the exact powers behind every npm supply-chain attack to date. Capwall makes those powers explicit:
+> Your app imports 1,000+ packages you've never read. Capwall makes each one
+> ask permission: **11 capabilities** (`env.read`, `child_process`, `http.request`,
+> `net.*`, `fs.*`, `dynamic-code`, …) scanned statically, locked in a reviewed
+> `capabilities.lock`, and enforced fail-closed inside V8 before userland runs.
 
-```bash
-npx @capwall/cli init                    # AST-scan node_modules → capabilities.lock
-capwall deny some-package child_process # revoke what you don't trust
-capwall run -- node app.js              # enforce: unauthorized use is BLOCKED
+```
+npx @capwall/cli init              # scan node_modules → capabilities.lock
+capwall deny some-pkg child_process# revoke what you don't trust
+capwall run -- node app.js         # enforce — unauthorized use throws
 ```
 
-- **11 capabilities** — `env.read`, `env.write`, `child_process`, `net.connect`, `net.listen`, `http.request`, `dns.resolve`, `fs.read`, `fs.write`, `dynamic-code`, `worker_threads`
-- **Fail-closed** — a recognized package stepping outside its grant throws `ERR_CAPWALL_CAPABILITY_DENIED`. Host application code is never restricted.
-- **Sound-by-construction scanning** — capability-relevant dataflow (alias tracking, base64 de-obfuscation, cross-file taint) with conservative escapes; obfuscated access is flagged, never missed silently.
-- **Bootstrap hardening** — opt-in primordials freezing (SES-style), prototype-pollution gadget sanitization (GHunter), tamper-proof stack attribution, first-loader guarantee.
-- **AI agents too** — `capwall wrap` puts coding agents and MCP servers behind a two-axis taint lattice with schema pinning and implicit-tool-poisoning detection.
-- **Attested supply chain** — every step emits Ed25519-signed in-toto/DSSE attestations; `capwall attest verify` proves the enforced `capabilities.lock` is bit-identical to the scanned one.
+## This repository
 
-## Packages
-
-| package | what |
+| package | role |
 |---|---|
-| `@capwall/core` | capability model, `capabilities.lock` schema, risk scoring |
-| `@capwall/scanner` | AST + dataflow analysis: local trees, registry tarballs, GitHub repos |
-| `@capwall/runtime-node` | `node --import` enforcement hook + hardening |
-| `@capwall/attestation` | in-toto v1.0 + DSSE, artifact rules, zkSBOM commitments |
-| `@capwall/agent-shield` | AI-agent/MCP reference monitor, taint lattice, MCP-ITP defense |
-| `@capwall/cli` | `capwall` — scan/init/verify/run/wrap/allow/deny/attest/sbom/mcp/taint |
-| `@capwall/exploit-sim-lab` | air-gapped exploit lab + split-screen demo (`pnpm sim:demo`) |
+| `@capwall/core` | capability model, `capabilities.lock` schema (zod + JSON-schema), risk scoring |
+| `@capwall/scanner` | acorn AST + capability dataflow: local trees, registry tarballs, GitHub manifests — nothing executes |
+| `@capwall/runtime-node` | `--import` enforcement: ESM resolve gating, CJS `Module._load` patch, env/fetch membranes, GHunter gadget sanitizer, primordials freezing, first-loader guarantee |
+| `@capwall/attestation` | in-toto v1.0 Layout/Link + DSSE Ed25519, artifact rules, supply-chain verifier, zkSBOM commitments |
+| `@wall/agent-shield` → `@capwall/agent-shield` | two-axis DIFC taint lattice, MCP schema pinning, implicit-tool-poisoning detector, evidential contracts |
+| `@capwall/cli` | `scan · init · verify · run · wrap · mcp · taint · attest · sbom` |
+| `@capwall/exploit-sim-lab` | air-gapped lab reproducing three 2026 attack patterns; split-screen pwned-vs-blocked table (`pnpm sim:demo`) |
 
-## Develop
+## Try it in 60 seconds
 
 ```bash
-pnpm install
-pnpm build && pnpm test        # 159 tests
-pnpm e2e                       # runtime blocking + attestation tamper + registry scan
-pnpm sim:demo                  # 3 landmark 2026 attack patterns, pwned vs blocked
+pnpm install && pnpm build && pnpm test   # 160+ tests
+pnpm e2e                                  # live blocking, tamper rejection, registry scan
+pnpm sim:demo                             # the launch-video demo table
 ```
 
-Quick demo: `cd examples/vulnerable-app` (see its README).
+Scan targets you can point any Capwall scanner at:
 
-Apache-2.0. Node ≥ 20.6 (agent-shield attestation flows ≥ 22.5).
+- `github.com/Extodan/Capwall-OSS/tree/main/examples/risky-app` — every stat non-zero (legit packages: ssh2, esbuild, cross-spawn…)
+- `github.com/Extodan/Capwall-OSS/tree/main/examples/compromised-app` — pinned real incident versions (and an honest lesson in what npm already purged)
+
+## Honest boundaries
+
+The runtime is a capability **gate**, not a cryptographic sandbox: it stops the
+standard attack paths (builtin imports, env reads, fetch exfil, prototype
+gadgets) at the module boundary and refuses to promise enforcement when it
+can't prove it loaded first. Full details in each package's README.
+
+## Contributing
+
+Small PRs welcome — CI runs `build → test → e2e → attest-verify → packed-tarball smoke`.
+Everything ships with tests; a fix without a failing test will be asked for one.
+
+Apache-2.0 (see `LICENSE`). Node ≥ 20.6.

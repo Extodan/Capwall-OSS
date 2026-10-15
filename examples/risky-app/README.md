@@ -5,7 +5,7 @@ still the answer to "how many packages can read your secrets right now?" is
 uncomfortable. Scan it:
 
 ```
-github.com/Extodan/Capwall/tree/main/examples/risky-app
+github.com/Extodan/Capwall-OSS/tree/main/examples/risky-app
 ```
 
 What you should see (43+ packages):

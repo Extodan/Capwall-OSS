@@ -12,7 +12,7 @@ the exact compromised release. The app itself does nothing and runs nothing.
 
 Scan it:
 
-- free scanner: paste `github.com/Extodan/Capwall/tree/main/examples/compromised-app`
+- free scanner: paste `github.com/Extodan/Capwall-OSS/tree/main/examples/compromised-app`
 - or: `curl -X POST <api>/api/scans -d '{"packageJson": "<this package.json>"}'`
 
 Nothing here executes; the scanner only reads tarballs statically.
