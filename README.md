@@ -5,7 +5,7 @@
   </picture>
 </p>
 
-<h3 align="center">The open-source engine behind <a href="https://github.com/Extodan/Capwall">Capwall</a> — zero-trust runtime permissions for Node.js, AI agents and MCP servers</h3>
+<h3 align="center">The open-source engine behind <a href="https://github.com/Extodan/Capwall">Capwall</a> · zero-trust runtime permissions for Node.js, AI agents and MCP servers</h3>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@extodan/capwall"><img src="https://img.shields.io/npm/v/@extodan/capwall?color=10B981" alt="npm version"></a>
@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue" alt="license">
 </p>
 
-<p align="center"><strong>72.9%</strong> of npm packages need zero system capabilities —<br>yet <strong>100%</strong> run with full access to your secrets, your shell, and your network.</p>
+<p align="center"><strong>72.9%</strong> of npm packages need zero system capabilities ·<br>yet <strong>100%</strong> run with full access to your secrets, your shell, and your network.</p>
 
 ## 30-Second Quickstart
 
@@ -47,15 +47,15 @@ cd examples/zero-day-hijack-demo && npm run demo:attack
 
 | module | ground truth |
 |---|---|
-| `runtime-node` — `node --import` V8 hook | **Mir** RWXi (MIT CSAIL, CCS'21) · **GHunter** gadget isolation (USENIX'24) · **NodeShield** import edges (CCS'25) |
-| `scanner` — AST + dataflow analysis | **Defensive Capability Analysis** (ASE'26) — capability-root escape tracking, base64 de-obfuscation, cross-file taint |
-| `agent-shield` — DIFC reference monitor | **Runtime Contracts** (arXiv:2608.11274) · **VIGIL/AgentSpec** · **MCP-ITP** · **FIDES** selective information hiding |
-| `attestation` — in-toto + DSSE + zkSBOM | **in-toto** (USENIX'19) · Ed25519 signed supply-chain proofs · zero-knowledge set commitments |
-| `cli` — `scan · init · verify · run · wrap · mcp · taint · attest · sbom` | 12 capabilities, scoped predicates (`env:["STRIPE_KEY"]`, `hosts:["api.stripe.com"]`), audit→enforce rollout |
+| `runtime-node` · `node --import` V8 hook | **Mir** RWXi (MIT CSAIL, CCS'21) · **GHunter** gadget isolation (USENIX'24) · **NodeShield** import edges (CCS'25) |
+| `scanner` · AST + dataflow analysis | **Defensive Capability Analysis** (ASE'26) · capability-root escape tracking, base64 de-obfuscation, cross-file taint |
+| `agent-shield` · DIFC reference monitor | **Runtime Contracts** (arXiv:2608.11274) · **VIGIL/AgentSpec** · **MCP-ITP** · **FIDES** selective information hiding |
+| `attestation` · in-toto + DSSE + zkSBOM | **in-toto** (USENIX'19) · Ed25519 signed supply-chain proofs · zero-knowledge set commitments |
+| `cli` · `scan · init · verify · run · wrap · mcp · taint · attest · sbom` | 12 capabilities, scoped predicates (`env:["STRIPE_KEY"]`, `hosts:["api.stripe.com"]`), audit→enforce rollout |
 
 ## Try it on a repo right now
 
-Point the free scanner at `github.com/Extodan/Capwall-OSS/tree/main/examples/risky-app` — eight popular packages (ssh2, esbuild, cross-spawn…), every stat honestly non-zero. Or try `examples/compromised-app` — pinned real incident versions, and a lesson in what npm already purged.
+Point the free scanner at `github.com/Extodan/Capwall-OSS/tree/main/examples/risky-app` · eight popular packages (ssh2, esbuild, cross-spawn…), every stat honestly non-zero. Or try `examples/compromised-app` · pinned real incident versions, and a lesson in what npm already purged.
 
 ## Develop
 

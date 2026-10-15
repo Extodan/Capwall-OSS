@@ -1,4 +1,4 @@
-# Capwall — from zero to enforced
+# Capwall · from zero to enforced
 
 This guide teaches the concepts, then walks through real workflows with actual terminal output. By the end you'll understand what Capwall does, why it works this way, and how to run it on your own projects.
 
@@ -13,9 +13,9 @@ When you `npm install` a package, it runs with **full access** to everything you
 - open network connections to any host (exfiltration channel)
 - spawn shell commands (`curl`, `rm`, cryptominers)
 
-This is called **ambient authority** — every line of code in `node_modules` inherits your app's full permissions, whether it needs them or not. Supply-chain attacks (event-stream, ua-parser-js, node-ipc) all exploited exactly this: a hijacked package didn't need to "break in" — it already had the keys.
+This is called **ambient authority** · every line of code in `node_modules` inherits your app's full permissions, whether it needs them or not. Supply-chain attacks (event-stream, ua-parser-js, node-ipc) all exploited exactly this: a hijacked package didn't need to "break in" · it already had the keys.
 
-**Capwall removes ambient authority.** Each package gets an explicit grant — only what its code actually uses — and everything else is blocked at the V8 engine level, before a single byte leaves the process.
+**Capwall removes ambient authority.** Each package gets an explicit grant · only what its code actually uses · and everything else is blocked at the V8 engine level, before a single byte leaves the process.
 
 ---
 
@@ -40,11 +40,11 @@ A **capability** is a class of sensitive action. Capwall tracks 12:
 | `worker_threads` | spawning worker threads | `new Worker('./task.js')` |
 | `import.guard` | undeclared lateral imports | `require('child_process')` from a package that doesn't declare it |
 
-Your **own application code is never restricted** — only packages inside `node_modules` are gated.
+Your **own application code is never restricted** · only packages inside `node_modules` are gated.
 
 ### 2. capabilities.lock
 
-A plain JSON file at your project root. One entry per installed package, listing exactly which capabilities that package's code actually uses (found by static analysis — nothing runs during the scan):
+A plain JSON file at your project root. One entry per installed package, listing exactly which capabilities that package's code actually uses (found by static analysis · nothing runs during the scan):
 
 ```json
 {
@@ -65,7 +65,7 @@ A plain JSON file at your project root. One entry per installed package, listing
 }
 ```
 
-**Review it in a PR like any other config change.** When a dependency update adds a new capability — say, a patch release of a string library suddenly needs `child_process` — that's a red flag you want to see before merging.
+**Review it in a PR like any other config change.** When a dependency update adds a new capability · say, a patch release of a string library suddenly needs `child_process` · that's a red flag you want to see before merging.
 
 ### 3. Enforcement
 
@@ -75,7 +75,7 @@ When you run your app under Capwall (`capwall run -- node app.js`), a V8 hook lo
 - **not granted** → throws `ERR_CAPWALL_CAPABILITY_DENIED`, the process stops (fail-closed)
 - **not in the lock at all** → follows `defaults.unrecognized` (`"warn"` logs it, `"block"` stops it)
 
-This is not a sandbox — it's a **gate**. It stops the standard attack paths at the module boundary and tells you honestly when it can't prove something.
+This is not a sandbox · it's a **gate**. It stops the standard attack paths at the module boundary and tells you honestly when it can't prove something.
 
 ---
 
@@ -101,7 +101,7 @@ You'll see something like:
            no sensitive capabilities
 ```
 
-**How to read this:** each package gets a score 0–100 based on which capabilities it uses and whether it has risk factors (install scripts, deprecation, obfuscation). CRITICAL doesn't mean malicious — `next` legitimately needs 10 capabilities to be a web server. The value is that you can now *see* it, and revoke anything that stops being legitimate.
+**How to read this:** each package gets a score 0–100 based on which capabilities it uses and whether it has risk factors (install scripts, deprecation, obfuscation). CRITICAL doesn't mean malicious · `next` legitimately needs 10 capabilities to be a web server. The value is that you can now *see* it, and revoke anything that stops being legitimate.
 
 ```bash
 # 2. Write the lock file (grants = what the scan found)
@@ -126,7 +126,7 @@ Your app runs normally. But now, if a package tries to read a secret it wasn't g
 
 ## Safe rollout: audit first, enforce later
 
-You don't have to enforce on day one. Start in **audit mode** — nothing blocks, every capability use is logged:
+You don't have to enforce on day one. Start in **audit mode** · nothing blocks, every capability use is logged:
 
 ```bash
 npx @extodan/capwall run --mode=audit -- npm start
@@ -145,7 +145,7 @@ After a few days in staging (or even production), check:
 npx @extodan/capwall verify
 ```
 
-This compares the lock against what's currently installed — `exit 0` if no drift, `exit 1` if something changed. When you're satisfied, drop `--mode=audit` to enforce.
+This compares the lock against what's currently installed · `exit 0` if no drift, `exit 1` if something changed. When you're satisfied, drop `--mode=audit` to enforce.
 
 ---
 
@@ -197,7 +197,7 @@ When a dependency update lands, the scan re-runs. If the new version uses a capa
 
 ## AI agents and MCP servers
 
-Coding agents (Claude Code, Cursor) and MCP servers have the same ambient-authority problem — with the extra risk of prompt injection telling them to read secrets or run shell commands.
+Coding agents (Claude Code, Cursor) and MCP servers have the same ambient-authority problem · with the extra risk of prompt injection telling them to read secrets or run shell commands.
 
 ```bash
 # Wrap Claude Code in the DIFC reference monitor
@@ -224,7 +224,7 @@ npx capwall taint status
 
 ## Supply-chain attestation (in-toto + DSSE)
 
-Proves the `capabilities.lock` running in production is **bit-identical** (SHA-256) to the one the scanner produced in CI — zero tampering room between the two:
+Proves the `capabilities.lock` running in production is **bit-identical** (SHA-256) to the one the scanner produced in CI · zero tampering room between the two:
 
 ```bash
 npx capwall keys generate        # local keystore (root + developer/ci/runtime Ed25519 keys)
@@ -240,7 +240,7 @@ npx capwall attest verify        # verify signatures + artifact chaining
   ✔ step_build_package
   ✔ step_runtime_enforcement
 
-  ✔ supply chain verified — capabilities.lock chained end-to-end
+  ✔ supply chain verified · capabilities.lock chained end-to-end
   attestation record: 0xccccdcee79a031864f…
 ```
 
@@ -268,7 +268,7 @@ npm run demo:attack
 │ 5  MCP-ITP poisoned tools/list (~/.ssh coercion)         │ BLOCKED │ ITP scan
 ```
 
-The app still works (`colorize()` returns your string) — only the attacks die.
+The app still works (`colorize()` returns your string) · only the attacks die.
 
 ---
 
