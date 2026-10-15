@@ -1,38 +1,94 @@
-# Capwall usage guide — from zero to enforced
+# Capwall — from zero to enforced
 
-Every workflow below uses the published CLI. No clone needed.
-
-```bash
-npm i -D @extodan/capwall     # once — then `npx capwall …` works everywhere
-# or skip install entirely: npx @extodan/capwall <command>
-```
+This guide teaches the concepts, then walks through real workflows with actual terminal output. By the end you'll understand what Capwall does, why it works this way, and how to run it on your own projects.
 
 ---
 
-## The mental model (30 seconds)
+## The problem Capwall solves
 
-```
-your code  ──imports──▶  their packages  ──▶  your secrets / shell / network
-                                │
-                        capabilities.lock  ← one JSON file decides what passes
-```
+When you `npm install` a package, it runs with **full access** to everything your app can do:
 
-1. **`init`** scans every package in `node_modules` (nothing runs) and writes `capabilities.lock` — one grant per package, exactly what its code actually uses.
-2. **You review the lock** in a PR. Deny what looks wrong. Scope what looks too broad.
-3. **`run`** starts your app under a V8 hook. Any package that touches a capability it wasn't granted → `ERR_CAPWALL_CAPABILITY_DENIED` — the process stops before a byte leaves.
+- read every environment variable (including `STRIPE_SECRET_KEY`, `DATABASE_URL`, AWS tokens)
+- read and write any file your process can reach (including `.env`, `~/.ssh/id_rsa`)
+- open network connections to any host (exfiltration channel)
+- spawn shell commands (`curl`, `rm`, cryptominers)
 
-Your own code is never restricted. Only `node_modules` is gated.
+This is called **ambient authority** — every line of code in `node_modules` inherits your app's full permissions, whether it needs them or not. Supply-chain attacks (event-stream, ua-parser-js, node-ipc) all exploited exactly this: a hijacked package didn't need to "break in" — it already had the keys.
+
+**Capwall removes ambient authority.** Each package gets an explicit grant — only what its code actually uses — and everything else is blocked at the V8 engine level, before a single byte leaves the process.
 
 ---
 
-## Workflow 1: Protect an existing app
+## The three concepts
+
+### 1. Capabilities
+
+A **capability** is a class of sensitive action. Capwall tracks 12:
+
+| capability | what it controls | example |
+|---|---|---|
+| `env.read` | reading `process.env` | `process.env.STRIPE_SECRET_KEY` |
+| `env.write` | mutating `process.env` | `process.env.NODE_ENV = 'production'` |
+| `child_process` | spawning processes | `require('child_process').exec('curl …')` |
+| `http.request` | outbound HTTP/fetch | `fetch('https://api.stripe.com')` |
+| `net.connect` | raw TCP connections | `new net.Socket().connect(port, host)` |
+| `net.listen` | binding a port | `server.listen(3000)` |
+| `fs.read` | reading files | `fs.readFileSync('.env')` |
+| `fs.write` | writing files | `fs.writeFileSync('/tmp/payload', data)` |
+| `dns.resolve` | DNS lookups | `dns.lookup('exfil.example.com')` |
+| `dynamic-code` | eval / new Function / vm | `eval(atob('…'))` |
+| `worker_threads` | spawning worker threads | `new Worker('./task.js')` |
+| `import.guard` | undeclared lateral imports | `require('child_process')` from a package that doesn't declare it |
+
+Your **own application code is never restricted** — only packages inside `node_modules` are gated.
+
+### 2. capabilities.lock
+
+A plain JSON file at your project root. One entry per installed package, listing exactly which capabilities that package's code actually uses (found by static analysis — nothing runs during the scan):
+
+```json
+{
+  "version": 1,
+  "defaults": { "unrecognized": "warn" },
+  "packages": {
+    "next@16.4.1": {
+      "capabilities": ["child_process", "env.read", "fs.read", "fs.write", "http.request", …],
+      "source": "scan"
+    },
+    "react@19.3.0": {
+      "capabilities": ["env.read"]
+    },
+    "clsx@2.1.1": {
+      "capabilities": []
+    }
+  }
+}
+```
+
+**Review it in a PR like any other config change.** When a dependency update adds a new capability — say, a patch release of a string library suddenly needs `child_process` — that's a red flag you want to see before merging.
+
+### 3. Enforcement
+
+When you run your app under Capwall (`capwall run -- node app.js`), a V8 hook loads before any of your code. Every `require()`, every `import`, every `process.env` access, every `fetch()` call from a package in `node_modules` is checked against the lock:
+
+- **granted** → allowed, recorded as "exercised" in telemetry
+- **not granted** → throws `ERR_CAPWALL_CAPABILITY_DENIED`, the process stops (fail-closed)
+- **not in the lock at all** → follows `defaults.unrecognized` (`"warn"` logs it, `"block"` stops it)
+
+This is not a sandbox — it's a **gate**. It stops the standard attack paths at the module boundary and tells you honestly when it can't prove something.
+
+---
+
+## Quickstart (any existing project)
 
 ```bash
 cd your-app
 
-# 1. Scan — see what each package actually does
-npx capwall scan
+# 1. See what you're dealing with (read-only, nothing changes)
+npx @extodan/capwall scan
 ```
+
+You'll see something like:
 
 ```
   CRITICAL  95 [██████████] next@16.4.1
@@ -45,83 +101,57 @@ npx capwall scan
            no sensitive capabilities
 ```
 
-> **Reading the output:** every package gets a score 0–100. CRITICAL doesn't mean malicious — `next` legitimately needs 10 capabilities to be a web server. The point is you can now *see* it, and revoke it if it stops being legit.
+**How to read this:** each package gets a score 0–100 based on which capabilities it uses and whether it has risk factors (install scripts, deprecation, obfuscation). CRITICAL doesn't mean malicious — `next` legitimately needs 10 capabilities to be a web server. The value is that you can now *see* it, and revoke anything that stops being legitimate.
 
 ```bash
-# 2. Write the lock (this is the baseline — grants = what the scan found)
-npx capwall init
+# 2. Write the lock file (grants = what the scan found)
+npx @extodan/capwall init
+
+# 3. Run under enforcement
+npx @extodan/capwall run -- npm run dev     # Next.js, or any npm-script app
+npx @extodan/capwall run -- node app.js     # plain Node.js
 ```
 
-```json
-// capabilities.lock — plain JSON, review it in a PR
-{
-  "version": 1,
-  "defaults": { "unrecognized": "warn" },
-  "packages": {
-    "next@16.4.1":   { "capabilities": ["child_process","env.read","fs.read", …] },
-    "react@19.3.0":  { "capabilities": ["env.read"] },
-    "clsx@2.1.1":    { "capabilities": [] }
-  }
-}
-```
-
-```bash
-# 3. Run under enforcement — for a Node.js app:
-npx capwall run -- node app.js
-
-#    for a Next.js / npm-script app:
-npx capwall run -- npm run dev
-
-#    for any framework (the CLI injects the hook via NODE_OPTIONS):
-npx capwall run -- npx next start
-```
+Your app runs normally. But now, if a package tries to read a secret it wasn't granted:
 
 ```
 [capwall] enforcing capabilities.lock (19 packages)
-▲ Next.js 15 ready in 412ms     ← your app runs normally
-```
-
-Now try `npm install some-suspicious-package` and import it — if it reads `.env` or spawns a shell:
-
-```
   ⛔ capwall BLOCKED
   evil-package@1.0.0 → env.read
      process.env.STRIPE_SECRET_KEY
      grant: capwall allow evil-package env.read
-✓ blocked: ERR_CAPWALL_CAPABILITY_DENIED
 ```
 
 ---
 
-## Workflow 2: Safe rollout (audit → enforce)
+## Safe rollout: audit first, enforce later
 
-Don't enforce on day one. Watch first:
+You don't have to enforce on day one. Start in **audit mode** — nothing blocks, every capability use is logged:
 
 ```bash
-# Audit mode: logs everything, blocks nothing — run in staging or even prod
-npx capwall run --mode=audit -- npm start
+npx @extodan/capwall run --mode=audit -- npm start
 ```
 
-Every capability use lands in `.capwall/audit.jsonl`:
+Every use lands in `.capwall/audit.jsonl`:
 
 ```json
 {"pkg":"next","capability":"env.read","action":"warned","detail":"process.env.NODE_ENV"}
-{"pkg":"next","capability":"http.request","action":"warned","detail":"import 'node:http'"}
+{"pkg":"typescript","capability":"child_process","action":"warned","detail":"require('node:child_process')"}
 ```
 
-After a few days, check the diff — what did packages use that the lock doesn't grant?
+After a few days in staging (or even production), check:
 
 ```bash
-npx capwall verify     # exit 0 = no drift, exit 1 = something changed
+npx @extodan/capwall verify
 ```
 
-When you're satisfied, flip to enforce (just drop `--mode=audit`).
+This compares the lock against what's currently installed — `exit 0` if no drift, `exit 1` if something changed. When you're satisfied, drop `--mode=audit` to enforce.
 
 ---
 
-## Workflow 3: Scoped grants (least privilege per argument)
+## Scoped grants: least privilege per argument
 
-A blanket `env.read` is too broad for a Stripe SDK — it only needs one variable. Scope it:
+A blanket `env.read` grant lets a package read *every* variable. For something like a Stripe SDK that only needs one key, scope it:
 
 ```json
 "stripe@12.0.0": {
@@ -133,48 +163,57 @@ A blanket `env.read` is too broad for a Stripe SDK — it only needs one variabl
 }
 ```
 
-Now `process.env.STRIPE_SECRET_KEY` passes, `process.env.DATABASE_URL` is blocked, `fetch("https://api.stripe.com")` passes, `fetch("https://evil.example")` is blocked — all with the same `ERR_CAPWALL_CAPABILITY_DENIED`.
+Now:
+- `process.env.STRIPE_SECRET_KEY` → allowed
+- `process.env.DATABASE_URL` → blocked (outside the env scope)
+- `fetch("https://api.stripe.com/v1/charges")` → allowed
+- `fetch("https://evil.example/exfil")` → blocked (host outside the scope)
+
+Subdomains of allowed hosts pass (`eu.api.stripe.com` is covered by `api.stripe.com`).
 
 Edit grants from the CLI:
 
 ```bash
 npx capwall allow stripe env.read http.request
-npx capwall deny next child_process        # revoke (keeps a zero-trust entry → blocks)
-npx capwall show                           # print current grants
+npx capwall deny next child_process
+npx capwall show
 ```
 
 ---
 
-## Workflow 4: CI — gate every PR
+## CI: gate every dependency change
+
+Add to your GitHub Actions workflow:
 
 ```yaml
-# .github/workflows/capwall.yml
 - run: npm ci
-- run: npx capwall init
-- run: npx capwall verify     # exit 1 if the lock doesn't match the tree
+- run: npx @extodan/capwall init
+- run: npx @extodan/capwall verify    # exit 1 on drift → PR fails
 ```
 
-A new dependency bumps in, the scan finds it uses `child_process` → `verify` fails → the PR shows the drift. A maintainer reviews, adds the grant (or rejects the dep), merge proceeds.
+When a dependency update lands, the scan re-runs. If the new version uses a capability the lock doesn't grant, `verify` fails, and the PR shows the drift. A maintainer reviews: is this legitimate (add the grant) or suspicious (reject the dep)?
 
 ---
 
-## Workflow 5: Wrap an AI coding agent (Claude Code, Cursor, MCP)
+## AI agents and MCP servers
+
+Coding agents (Claude Code, Cursor) and MCP servers have the same ambient-authority problem — with the extra risk of prompt injection telling them to read secrets or run shell commands.
 
 ```bash
 # Wrap Claude Code in the DIFC reference monitor
 npx capwall wrap -- claude
 
-# Wrap any MCP server (stdio JSON-RPC proxy with schema pinning)
+# Wrap any MCP server (stdio proxy with schema pinning)
 npx capwall wrap --agent=mcp -- node ./mcp-server.js
 
 # Audit an MCP server's tools/list for implicit tool poisoning
+# (hidden instructions that tell the agent to use bash to exfiltrate ~/.ssh keys)
 npx capwall mcp scan ./mcp.json
-npx capwall mcp scan evil-mcp -- node server.js
 
-# Pin the schema digest (blocks rug-pull mutations)
-npx capwall mcp lock evil-mcp -- node server.js
+# Pin the tools/list schema (blocks rug-pull mutations)
+npx capwall mcp lock my-server -- node server.js
 
-# Claude Code PreToolUse hook (blocks secret reads + pipe-to-shell)
+# Install the Claude Code PreToolUse hook (blocks secret reads + pipe-to-shell)
 npx capwall agent install claude
 
 # See what's tainted across agent sessions
@@ -183,16 +222,16 @@ npx capwall taint status
 
 ---
 
-## Workflow 6: Attest your supply chain (in-toto + DSSE)
+## Supply-chain attestation (in-toto + DSSE)
 
-Proves the `capabilities.lock` running in production is bit-identical (SHA-256) to what the scanner produced in CI.
+Proves the `capabilities.lock` running in production is **bit-identical** (SHA-256) to the one the scanner produced in CI — zero tampering room between the two:
 
 ```bash
-npx capwall keys generate           # local keystore: root + dev/ci/runtime Ed25519 keys
-npx capwall init                    # produce the lock
-npx capwall attest layout           # create + sign root.layout
-npx capwall attest emit-all         # emit 4 signed links (checkout → scan → build → runtime)
-npx capwall attest verify           # verify signatures + artifact chaining
+npx capwall keys generate        # local keystore (root + developer/ci/runtime Ed25519 keys)
+npx capwall init                 # produce the lock
+npx capwall attest layout        # create + sign root.layout
+npx capwall attest emit-all      # emit 4 signed links (checkout → scan → build → runtime)
+npx capwall attest verify        # verify signatures + artifact chaining
 ```
 
 ```
@@ -205,13 +244,15 @@ npx capwall attest verify           # verify signatures + artifact chaining
   attestation record: 0xccccdcee79a031864f…
 ```
 
+Export a signed SBOM:
+
 ```bash
-npx capwall sbom export --format=cyclonedx    # DSSE-signed CycloneDX SBOM
+npx capwall sbom export --format=cyclonedx
 ```
 
 ---
 
-## Workflow 7: See attacks blocked live
+## See it stop five real attacks
 
 ```bash
 git clone https://github.com/Extodan/Capwall-OSS
@@ -227,37 +268,25 @@ npm run demo:attack
 │ 5  MCP-ITP poisoned tools/list (~/.ssh coercion)         │ BLOCKED │ ITP scan
 ```
 
+The app still works (`colorize()` returns your string) — only the attacks die.
+
 ---
 
-## Command cheat sheet
+## Command reference
 
-```
-scan [dir] [-v]                        capability + risk report (no writes)
-init [dir]                             write capabilities.lock
-verify [dir]                           lock vs tree drift (exit 1 = CI fail)
-run [--mode=enforce|audit] -- <cmd>    enforce / observe
-allow|deny <pkg> <cap…>                edit grants
-show                                   print the lock
-capabilities                           list the 12 capabilities + hardening tiers
-
-wrap [--agent=claude|cursor|codex|mcp] -- <cmd>   agent/MCP DIFC shield
-mcp scan|lock <name> [-- <cmd>|file.json]         ITP audit + schema pin
-taint status|clear                                 cross-session taint ledger
-agent install claude                               PreToolUse hook
-
-keys generate                         Ed25519 keystore
-attest layout|emit-all|verify         in-toto + DSSE supply chain
-sbom export --format=cyclonedx        signed CycloneDX SBOM
-```
-
-## Troubleshooting
-
-| problem | fix |
+| command | what it does |
 |---|---|
-| `command not found: capwall` | `npm i -D @extodan/capwall` first, or use `npx @extodan/capwall <cmd>` |
-| `Cannot find module app.js` | point `run --` at your actual entry: `node dist/server.js`, `npm run dev`, `npx next start` |
-| `no keystore found` | `npx capwall keys generate` (needed for `attest` + `sbom` only) |
-| `unknown option '--layout'` | subcommands are positional: `npx capwall attest layout` (no `--`) |
-| `wrap` exits silently | for non-MCP agents it injects via `NODE_OPTIONS` — the wrapped tool must be a Node process or npm script |
-| everything WARNs, nothing blocks | the lock has `defaults.unrecognized: "warn"` — set `"block"` or `npx capwall deny <pkg> <cap>` |
-| audit.jsonl is growing | it's append-only telemetry — safe to delete or `.gitignore` `.capwall/` |
+| `scan [dir] [-v]` | capability + risk report (read-only) |
+| `init [dir]` | write `capabilities.lock` |
+| `verify [dir]` | lock vs tree drift (exit 1 = CI fail) |
+| `run [--mode=enforce\|audit] -- <cmd>` | enforce / observe |
+| `allow\|deny <pkg> <cap…>` | edit grants |
+| `show` | print the lock |
+| `capabilities` | list the 12 capabilities + hardening tiers |
+| `wrap [--agent=…] -- <cmd>` | agent/MCP DIFC shield |
+| `mcp scan\|lock` | ITP audit + schema pinning |
+| `taint status\|clear` | cross-session taint ledger |
+| `agent install claude` | PreToolUse hook |
+| `keys generate` | Ed25519 keystore |
+| `attest layout\|emit-all\|verify` | in-toto + DSSE supply chain |
+| `sbom export` | signed CycloneDX SBOM |
