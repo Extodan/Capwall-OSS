@@ -1,0 +1,16 @@
+{
+  "name": "risky-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Free-scanner demo target: every capability stat honestly non-zero, every package 100% legitimate.",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "axios": "^1.7.7",
+    "execa": "^9.5.1",
+    "husky": "^9.1.6",
+    "esbuild": "^0.24.0",
+    "cross-spawn": "^7.0.3",
+    "ssh2": "^1.16.0",
+    "google-libphonenumber": "^3.2.40"
+  }
+}
