@@ -22,7 +22,7 @@ capwall run -- node app.js         # enforce — unauthorized use throws
 | `@capwall/scanner` | acorn AST + capability dataflow: local trees, registry tarballs, GitHub manifests — nothing executes |
 | `@capwall/runtime-node` | `--import` enforcement: ESM resolve gating, CJS `Module._load` patch, env/fetch membranes, GHunter gadget sanitizer, primordials freezing, first-loader guarantee |
 | `@capwall/attestation` | in-toto v1.0 Layout/Link + DSSE Ed25519, artifact rules, supply-chain verifier, zkSBOM commitments |
-| `@wall/agent-shield` → `@capwall/agent-shield` | two-axis DIFC taint lattice, MCP schema pinning, implicit-tool-poisoning detector, evidential contracts |
+| `@capwall/agent-shield` | two-axis DIFC taint lattice, MCP schema pinning, implicit-tool-poisoning detector, evidential contracts |
 | `@capwall/cli` | `scan · init · verify · run · wrap · mcp · taint · attest · sbom` |
 | `@capwall/exploit-sim-lab` | air-gapped lab reproducing three 2026 attack patterns; split-screen pwned-vs-blocked table (`pnpm sim:demo`) |
 
