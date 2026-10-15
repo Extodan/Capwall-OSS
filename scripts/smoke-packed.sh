@@ -23,9 +23,10 @@ echo "── npx-equivalent CLI from packed tarball"
 APP="$OUT/app"; mkdir -p "$APP/node_modules"
 cp -R "$ROOT/examples/vulnerable-app/vendor/evil-left-pad" "$APP/node_modules/"
 echo '{"name":"t","version":"1.0.0","dependencies":{"evil-left-pad":"file:./node_modules/evil-left-pad"}}' > "$APP/package.json"
+cp "$ROOT/examples/vulnerable-app/app.js" "$APP/app.js"  # resolution walks from the script, not cwd
 cd "$APP"
 node "$CW" init >/dev/null 2>&1 && echo "  ✔ init (packed)"
 node "$CW" verify >/dev/null && echo "  ✔ verify clean (packed)"
 node "$CW" deny evil-left-pad env.read child_process http.request >/dev/null
-node "$CW" run -- node "$ROOT/examples/vulnerable-app/app.js" 2>&1 | grep -q "BLOCK" && echo "  ✔ runtime enforcement blocks attacks (packed)" || { echo "  ✖ NOT blocked"; exit 1; }
+node "$CW" run -- node app.js 2>&1 | grep -q "BLOCK" && echo "  ✔ runtime enforcement blocks attacks (packed)" || { echo "  ✖ NOT blocked"; exit 1; }
 echo "SMOKE OK"
