@@ -12,7 +12,7 @@ const npx = (args, env = {}) => spawnSync('npx', ['--yes', '@extodan/capwall', .
 
 // --- run the app twice: naked, then walled
 console.log(BOLD('\n── run 1: standard node (no protection)'))
-const raw = npx(['run', '--', 'node', 'app.tmp.js'], { STRIPE_SECRET_KEY: 'sk_live_51CapwallDemoSecret999' })
+const raw = npx(['run', '--', 'node', 'app.tmp.js'], { STRIPE_SECRET_KEY: 'sk_live-demo-not-a-real-key-999' })
 console.log((raw.stdout || '').trim(), DIM((raw.stderr || '').trim().split('\n').slice(0, 1).join('')))
 
 console.log(BOLD('\n── run 2: under capwall (zero-trust lock + frozen prototypes)'))
@@ -21,7 +21,7 @@ fs.writeFileSync('capabilities.lock', JSON.stringify({
   hardening: { freezePrototypes: true, importGraph: 'strict' },
   packages: { 'evil-color-logger@3.1.4': { capabilities: [], notes: 'explicitly revoked' } },
 }, null, 2))
-const walled = npx(['run', '--', 'node', 'app.tmp.js'], { STRIPE_SECRET_KEY: 'sk_live_51CapwallDemoSecret999' })
+const walled = npx(['run', '--', 'node', 'app.tmp.js'], { STRIPE_SECRET_KEY: 'sk_live-demo-not-a-real-key-999' })
 const out = `${walled.stdout || ''}\n${walled.stderr || ''}`
 
 // --- attack 5: MCP-ITP scan of the poisoned tools document
