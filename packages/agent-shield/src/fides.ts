@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { canonicalJson } from '@capwall/attestation'
+import { canonicalJson } from '@extodan/capwall-attestation'
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { joinTaint, type Confidentiality, type Integrity, type TaintState } from './taint.js'

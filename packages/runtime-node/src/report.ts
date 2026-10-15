@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { Capability, ViolationEvent } from '@capwall/core'
+import type { Capability, ViolationEvent } from '@extodan/capwall-core'
 import type { PkgRef } from './attribute.js'
 import type { Policy } from './policy.js'
 
@@ -111,7 +111,7 @@ export class Reporter {
     if (pkg) this.loadedPackages.add(`${pkg.name}@${pkg.version}`)
   }
 
-  /** Telemetry snapshot shaped for @capwall/attestation's RBOM predicate. */
+  /** Telemetry snapshot shaped for @extodan/capwall-attestation's RBOM predicate. */
   snapshot(): {
     loadedPackages: string[]
     exercised: Record<string, Capability[]>

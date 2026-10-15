@@ -6,7 +6,7 @@ import {
   factorsForCapabilities,
   type PackageReport,
   type ScanReport,
-} from '@capwall/core'
+} from '@extodan/capwall-core'
 import { analyzeSource, mergeFindings } from './ast.js'
 import { buildReport, type ManifestInput } from './analyze.js'
 

@@ -1,8 +1,8 @@
 /**
  * Capwall runtime entry — load with:
- *   node --import @capwall/runtime-node app.js
+ *   node --import @extodan/capwall-runtime-node app.js
  * or programmatically:
- *   import '@capwall/runtime-node'
+ *   import '@extodan/capwall-runtime-node'
  */
 import * as nodeModule from 'node:module'
 import { fileURLToPath } from 'node:url'

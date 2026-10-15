@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync, rmSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { parseLock } from '@capwall/core'
+import { parseLock } from '@extodan/capwall-core'
 
 const ROOT = join(import.meta.dirname, '..')
 const CLI = join(ROOT, 'dist', 'cli.mjs')

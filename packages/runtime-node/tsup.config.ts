@@ -16,7 +16,7 @@ export default defineConfig({
   splitting: false,
   clean: true,
   target: 'node20',
-  noExternal: ['@capwall/core'],
+  noExternal: ['@extodan/capwall-core'],
   banner: {
     js: '/* Capwall runtime — capability enforcement for node_modules. Apache-2.0. */',
   },

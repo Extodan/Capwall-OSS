@@ -9,7 +9,7 @@ per-package runtime permissions for `node_modules`, AI agents, and MCP servers.
 > `capabilities.lock`, and enforced fail-closed inside V8 before userland runs.
 
 ```
-npx @capwall/cli init              # scan node_modules → capabilities.lock
+npx @extodan/capwall init              # scan node_modules → capabilities.lock
 capwall deny some-pkg child_process# revoke what you don't trust
 capwall run -- node app.js         # enforce — unauthorized use throws
 ```
@@ -18,13 +18,13 @@ capwall run -- node app.js         # enforce — unauthorized use throws
 
 | package | role |
 |---|---|
-| `@capwall/core` | capability model, `capabilities.lock` schema (zod + JSON-schema), risk scoring |
-| `@capwall/scanner` | acorn AST + capability dataflow: local trees, registry tarballs, GitHub manifests — nothing executes |
-| `@capwall/runtime-node` | `--import` enforcement: ESM resolve gating, CJS `Module._load` patch, env/fetch membranes, GHunter gadget sanitizer, primordials freezing, first-loader guarantee |
-| `@capwall/attestation` | in-toto v1.0 Layout/Link + DSSE Ed25519, artifact rules, supply-chain verifier, zkSBOM commitments |
-| `@capwall/agent-shield` | two-axis DIFC taint lattice, MCP schema pinning, implicit-tool-poisoning detector, evidential contracts |
-| `@capwall/cli` | `scan · init · verify · run · wrap · mcp · taint · attest · sbom` |
-| `@capwall/exploit-sim-lab` | air-gapped lab reproducing three 2026 attack patterns; split-screen pwned-vs-blocked table (`pnpm sim:demo`) |
+| `@extodan/capwall-core` | capability model, `capabilities.lock` schema (zod + JSON-schema), risk scoring |
+| `@extodan/capwall-scanner` | acorn AST + capability dataflow: local trees, registry tarballs, GitHub manifests — nothing executes |
+| `@extodan/capwall-runtime-node` | `--import` enforcement: ESM resolve gating, CJS `Module._load` patch, env/fetch membranes, GHunter gadget sanitizer, primordials freezing, first-loader guarantee |
+| `@extodan/capwall-attestation` | in-toto v1.0 Layout/Link + DSSE Ed25519, artifact rules, supply-chain verifier, zkSBOM commitments |
+| `@extodan/capwall-agent-shield` | two-axis DIFC taint lattice, MCP schema pinning, implicit-tool-poisoning detector, evidential contracts |
+| `@extodan/capwall` | `scan · init · verify · run · wrap · mcp · taint · attest · sbom` |
+| `@extodan/capwall-exploit-sim-lab` | air-gapped lab reproducing three 2026 attack patterns; split-screen pwned-vs-blocked table (`pnpm sim:demo`) |
 
 ## Try it in 60 seconds
 

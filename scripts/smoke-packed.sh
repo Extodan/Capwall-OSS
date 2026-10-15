@@ -9,13 +9,13 @@ d['dependencies']={k:('0.1.0' if v.startswith('workspace:') else v) for k,v in d
 json.dump(d, open('package.json','w'), indent=2)" && pnpm pack --pack-destination "$OUT" >/dev/null)
   (cd "$ROOT/packages/$p" && python3 -c "
 import json; d=json.load(open('package.json'))
-d['dependencies']={k:('workspace:*' if k.startswith('@capwall/') else v) for k,v in d.get('dependencies',{}).items()}
+d['dependencies']={k:('workspace:*' if k.startswith('@extodan/capwall-') else v) for k,v in d.get('dependencies',{}).items()}
 json.dump(d, open('package.json','w'), indent=2)")
 done
 echo "  tarballs: $(ls "$OUT"/*.tgz | wc -l | tr -d ' ')"
 echo "── pristine npm install from tarballs"
 PROJ="$OUT/proj"; mkdir -p "$PROJ"; cd "$PROJ"; npm init -y >/dev/null
-npm install --no-audit --no-fund "$OUT"/capwall-core-*.tgz "$OUT"/capwall-scanner-*.tgz "$OUT"/capwall-runtime-node-*.tgz "$OUT"/capwall-attestation-*.tgz "$OUT"/capwall-agent-shield-*.tgz "$OUT"/capwall-cli-*.tgz >/dev/null
+npm install --no-audit --no-fund "$OUT"/core-*.tgz "$OUT"/scanner-*.tgz "$OUT"/runtime-node-*.tgz "$OUT"/attestation-*.tgz "$OUT"/agent-shield-*.tgz "$OUT"/cli-*.tgz >/dev/null
 CW="$PROJ/node_modules/.bin/capwall"
 echo "── npx-equivalent CLI from packed tarball"
 APP="$OUT/app"; mkdir -p "$APP/node_modules"

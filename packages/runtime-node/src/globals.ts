@@ -1,4 +1,4 @@
-import type { Capability } from '@capwall/core'
+import type { Capability } from '@extodan/capwall-core'
 import { attributeStack, currentStack } from './attribute.js'
 import { CapabilityDeniedError, checkCapability, type CheckContext } from './check.js'
 

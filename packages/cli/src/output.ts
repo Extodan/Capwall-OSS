@@ -1,5 +1,5 @@
 import picocolors from 'picocolors'
-import { CAPABILITY_INFO, RISK_FACTORS, type PackageReport, type ScanReport } from '@capwall/core'
+import { CAPABILITY_INFO, RISK_FACTORS, type PackageReport, type ScanReport } from '@extodan/capwall-core'
 
 const LEVEL_COLOR: Record<PackageReport['level'], (s: string) => string> = {
   low: picocolors.green,

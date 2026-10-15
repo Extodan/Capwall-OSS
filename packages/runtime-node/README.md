@@ -1,9 +1,9 @@
-# @capwall/runtime-node
+# @extodan/capwall-runtime-node
 
 The enforcement hook. Load with:
 
 ```bash
-node --import @capwall/runtime-node app.js
+node --import @extodan/capwall-runtime-node app.js
 # or
 capwall run -- node app.js
 ```

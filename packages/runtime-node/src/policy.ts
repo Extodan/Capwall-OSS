@@ -7,7 +7,7 @@ import {
   parseLock,
   type Capability,
   type LockFile,
-} from '@capwall/core'
+} from '@extodan/capwall-core'
 
 export type ViolationAction = 'allow' | 'warn' | 'block'
 

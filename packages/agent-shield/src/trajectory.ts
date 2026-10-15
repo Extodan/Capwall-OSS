@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { canonicalJson } from '@capwall/attestation'
+import { canonicalJson } from '@extodan/capwall-attestation'
 import type { TaintState } from './taint.js'
 
 /**

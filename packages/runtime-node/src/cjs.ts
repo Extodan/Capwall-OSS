@@ -1,5 +1,5 @@
 import Module from 'node:module'
-import { builtinCapabilities, normalizeSpecifier, type Capability } from '@capwall/core'
+import { builtinCapabilities, normalizeSpecifier, type Capability } from '@extodan/capwall-core'
 import { packageForFile } from './attribute.js'
 import { CapabilityDeniedError, checkCapability, type CheckContext } from './check.js'
 import { wrapChildProcess } from './gadgets.js'

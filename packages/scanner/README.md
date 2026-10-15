@@ -1,4 +1,4 @@
-# @capwall/scanner
+# @extodan/capwall-scanner
 
 Static capability analysis for npm packages. Nothing executes — ever.
 

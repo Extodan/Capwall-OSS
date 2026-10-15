@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, chmodSync } from 'node:fs'
 import { join } from 'node:path'
-import { generateKeyPair, type KeyPair } from '@capwall/attestation'
+import { generateKeyPair, type KeyPair } from '@extodan/capwall-attestation'
 
 /** Local keystore: .capwall/keys.json — root + functionary Ed25519 keys (0600). */
 

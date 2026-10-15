@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
-import { builtinCapabilities, normalizeSpecifier, type Capability } from '@capwall/core'
-import { grantedCapabilities } from '@capwall/core'
+import { builtinCapabilities, normalizeSpecifier, type Capability } from '@extodan/capwall-core'
+import { grantedCapabilities } from '@extodan/capwall-core'
 import { packageForFile } from './attribute.js'
 import { checkCapability, type CheckContext } from './check.js'
 

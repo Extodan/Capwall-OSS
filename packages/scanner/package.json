@@ -1,5 +1,5 @@
 {
-  "name": "@capwall/scanner",
+  "name": "@extodan/capwall-scanner",
   "version": "0.1.0",
   "description": "Static capability analysis for npm packages \u2014 AST scan of local trees or registry tarballs, no install required.",
   "type": "module",
@@ -23,7 +23,7 @@
     "lint": "biome check src test"
   },
   "dependencies": {
-    "@capwall/core": "workspace:*",
+    "@extodan/capwall-core": "workspace:*",
     "acorn": "^8.14.0",
     "acorn-walk": "^8.3.4",
     "semver": "^7.6.3",

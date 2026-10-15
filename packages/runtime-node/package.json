@@ -1,5 +1,5 @@
 {
-  "name": "@capwall/runtime-node",
+  "name": "@extodan/capwall-runtime-node",
   "version": "0.1.0",
   "description": "Node.js --import runtime hook: intercepts and blocks unauthorized process.env, child_process, fs and outbound net/http usage per package, per capabilities.lock.",
   "type": "module",
@@ -19,7 +19,7 @@
     "lint": "biome check src test"
   },
   "dependencies": {
-    "@capwall/core": "workspace:*"
+    "@extodan/capwall-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

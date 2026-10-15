@@ -20,10 +20,10 @@ importers:
 
   packages/agent-shield:
     dependencies:
-      '@capwall/attestation':
+      '@extodan/capwall-attestation':
         specifier: workspace:*
         version: link:../attestation
-      '@capwall/core':
+      '@extodan/capwall-core':
         specifier: workspace:*
         version: link:../core
       picomatch:
@@ -48,7 +48,7 @@ importers:
 
   packages/attestation:
     dependencies:
-      '@capwall/core':
+      '@extodan/capwall-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -64,19 +64,19 @@ importers:
 
   packages/cli:
     dependencies:
-      '@capwall/agent-shield':
+      '@extodan/capwall-agent-shield':
         specifier: workspace:*
         version: link:../agent-shield
-      '@capwall/attestation':
+      '@extodan/capwall-attestation':
         specifier: workspace:*
         version: link:../attestation
-      '@capwall/core':
+      '@extodan/capwall-core':
         specifier: workspace:*
         version: link:../core
-      '@capwall/runtime-node':
+      '@extodan/capwall-runtime-node':
         specifier: workspace:*
         version: link:../runtime-node
-      '@capwall/scanner':
+      '@extodan/capwall-scanner':
         specifier: workspace:*
         version: link:../scanner
       commander:
@@ -114,10 +114,10 @@ importers:
 
   packages/exploit-sim-lab:
     dependencies:
-      '@capwall/core':
+      '@extodan/capwall-core':
         specifier: workspace:*
         version: link:../core
-      '@capwall/runtime-node':
+      '@extodan/capwall-runtime-node':
         specifier: workspace:*
         version: link:../runtime-node
     devDependencies:
@@ -133,7 +133,7 @@ importers:
 
   packages/runtime-node:
     dependencies:
-      '@capwall/core':
+      '@extodan/capwall-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -149,7 +149,7 @@ importers:
 
   packages/scanner:
     dependencies:
-      '@capwall/core':
+      '@extodan/capwall-core':
         specifier: workspace:*
         version: link:../core
       acorn:

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { builtinCapabilities, normalizeSpecifier, type Capability } from '@capwall/core'
+import { builtinCapabilities, normalizeSpecifier, type Capability } from '@extodan/capwall-core'
 import type { PolicyData } from './policy.js'
 
 /**

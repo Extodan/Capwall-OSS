@@ -1,4 +1,4 @@
-import type { Capability } from '@capwall/core'
+import type { Capability } from '@extodan/capwall-core'
 import type { PkgRef } from './attribute.js'
 import type { Policy } from './policy.js'
 import type { Reporter } from './report.js'

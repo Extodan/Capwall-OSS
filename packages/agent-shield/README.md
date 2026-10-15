@@ -1,11 +1,11 @@
-# @capwall/agent-shield
+# @extodan/capwall-agent-shield
 
 The AI Agent & MCP Runtime Shield — the dual-faced runtime contract harness
 (arXiv:2608.11274) plus the VIGIL/AgentSpec two-axis DIFC reference monitor,
 built on Capwall's core primitives. Spec: root `AGENT_SHIELD_CONTEXT.md`.
 
 ```ts
-import { ReferenceMonitor, AgentsAndMcp } from '@capwall/agent-shield'
+import { ReferenceMonitor, AgentsAndMcp } from '@extodan/capwall-agent-shield'
 
 const policy = AgentsAndMcp.parse(lockJson.agents_and_mcp)
 const monitor = new ReferenceMonitor(policy, 'claude-code')
@@ -30,7 +30,7 @@ monitor.decide({ tool: 'http.post', args: { url: 'https://evil.example' } })
   `H_t = SHA256(H_{t-1} ∥ ActorID ∥ SkillManifestHash ∥ ToolName ∥ CanonicalArgsHash ∥ TaintState ∥ Decision ∥ ResultHash)`
   with tamper detection (`verify()`)
 - `evidence.ts` — EvidenceLedger (harness-captured receipts, refuses failures), freshness
-  vs `lastWriteTs()`, DSSE-signed ledgers via @capwall/attestation
+  vs `lastWriteTs()`, DSSE-signed ledgers via @extodan/capwall-attestation
 - `sanitizer.ts` — pre-ingestion SKILL.md / MCP `tools/list` scanner: invisible Unicode
   (incl. language-tag plane), imperative overrides, credential references, exfil
   imperatives, fake `<important>` directives, cross-tool chaining, env harvesting

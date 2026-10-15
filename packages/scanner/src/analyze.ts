@@ -8,7 +8,7 @@ import {
   type ScanProgress,
   type ScanReport,
   type ScanSource,
-} from '@capwall/core'
+} from '@extodan/capwall-core'
 import { NpmRegistry } from './npm.js'
 import { scanTarball } from './tarball.js'
 import { DEFAULT_FETCH, mapWithPool, type FetchLike } from './util.js'

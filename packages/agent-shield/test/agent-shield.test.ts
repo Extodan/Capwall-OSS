@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { generateKeyPair } from '@capwall/attestation'
+import { generateKeyPair } from '@extodan/capwall-attestation'
 import {
   AgentsAndMcp,
   EvidenceLedger,

@@ -57,7 +57,7 @@ export interface ScanReport {
   error?: string
 }
 
-/** A runtime violation reported by @capwall/runtime-node. */
+/** A runtime violation reported by @extodan/capwall-runtime-node. */
 export interface ViolationEvent {
   id: string
   ts: string

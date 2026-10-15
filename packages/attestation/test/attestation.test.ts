@@ -18,7 +18,7 @@ import {
   verifySupplyChain,
   type DigestMap,
 } from '../src/index.js'
-import type { ScanReport } from '@capwall/core'
+import type { ScanReport } from '@extodan/capwall-core'
 
 const sha = (content: string) => sha256Hex(content)
 
@@ -193,7 +193,7 @@ describe('end-to-end supply chain verification', () => {
     const swapped = emitLink(
       'step_runtime_enforcement',
       {
-        command: ['node', '--import', '@capwall/runtime-node'],
+        command: ['node', '--import', '@extodan/capwall-runtime-node'],
         materials: digestMap({ 'capabilities.lock': 'SWAPPED-LOCK', 'dist/app.js': 'BUNDLE' }),
       },
       runtimeNode,

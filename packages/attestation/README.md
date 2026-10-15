@@ -1,4 +1,4 @@
-# @capwall/attestation
+# @extodan/capwall-attestation
 
 in-toto Layout & Link metadata (spec v1.0 / attestation framework) + DSSE signing,
 implemented with `node:crypto` Ed25519 — no external dependencies.
@@ -21,7 +21,7 @@ implemented with `node:crypto` Ed25519 — no external dependencies.
   needs to store that digest; no chain code yet by design.
 
 ```ts
-import { generateKeyPair, signEnvelope, verifyEnvelope } from '@capwall/attestation'
+import { generateKeyPair, signEnvelope, verifyEnvelope } from '@extodan/capwall-attestation'
 const key = generateKeyPair('ci')
 const env = signEnvelope(payload, key)
 verifyEnvelope(env, { [key.keyid]: key.publicHex }).valid // true

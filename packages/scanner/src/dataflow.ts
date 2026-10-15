@@ -1,7 +1,7 @@
 import { parse } from 'acorn'
 import type { Node } from 'acorn'
 import { full } from 'acorn-walk'
-import type { Capability } from '@capwall/core'
+import type { Capability } from '@extodan/capwall-core'
 
 /**
  * §1 gap-closer (Xu & Møller, ASE 2026): capability-relevant DATAFLOW, not

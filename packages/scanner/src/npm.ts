@@ -1,4 +1,4 @@
-import type { PackageMeta } from '@capwall/core'
+import type { PackageMeta } from '@extodan/capwall-core'
 import semver from 'semver'
 import { fetchBuffer, fetchJson, HttpError, type FetchLike } from './util.js'
 

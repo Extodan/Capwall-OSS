@@ -1,6 +1,6 @@
 {
-  "name": "@capwall/cli",
-  "version": "0.1.0",
+  "name": "@extodan/capwall",
+  "version": "0.1.1",
   "description": "capwall \u2014 capability firewall for npm dependencies: scan, lock, enforce, attest.",
   "type": "module",
   "license": "Apache-2.0",
@@ -15,7 +15,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "docs"
   ],
   "scripts": {
     "build": "tsup",
@@ -23,17 +24,39 @@
     "lint": "biome check src test"
   },
   "dependencies": {
-    "@capwall/attestation": "workspace:*",
-    "@capwall/core": "workspace:*",
-    "@capwall/runtime-node": "workspace:*",
-    "@capwall/scanner": "workspace:*",
+    "@extodan/capwall-attestation": "workspace:*",
+    "@extodan/capwall-core": "workspace:*",
+    "@extodan/capwall-runtime-node": "workspace:*",
+    "@extodan/capwall-scanner": "workspace:*",
     "commander": "^12.1.0",
     "picocolors": "^1.1.1",
-    "@capwall/agent-shield": "workspace:*"
+    "@extodan/capwall-agent-shield": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
     "tsup": "^8.3.5",
     "vitest": "^3.0.0"
+  },
+  "keywords": [
+    "security",
+    "supply-chain",
+    "npm",
+    "permissions",
+    "capabilities",
+    "runtime",
+    "sandbox",
+    "mcp",
+    "ai-agents",
+    "firewall",
+    "in-toto"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Extodan/Capwall-OSS.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/Extodan/Capwall-OSS#readme",
+  "bugs": {
+    "url": "https://github.com/Extodan/Capwall-OSS/issues"
   }
 }

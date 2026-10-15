@@ -1,4 +1,4 @@
-import type { Capability, ScanReport, ViolationEvent } from '@capwall/core'
+import type { Capability, ScanReport, ViolationEvent } from '@extodan/capwall-core'
 import { signEnvelope, type Envelope } from './dsse.js'
 import { createLayout, type Layout, type LayoutStep } from './layout.js'
 import { parseRule, type Rule } from './rules.js'
@@ -54,7 +54,7 @@ export function capwallLayoutSteps(rules: Record<string, Rule[]> = DEFAULT_RULES
     { name: STEP_GIT_CHECKOUT, expectedCommand: ['git', 'checkout'], authorizedKeyids: [], artifactRules: rules[STEP_GIT_CHECKOUT] ?? [] },
     { name: STEP_AST_CAPABILITY_SCAN, expectedCommand: ['capwall', 'scan'], authorizedKeyids: [], artifactRules: rules[STEP_AST_CAPABILITY_SCAN] ?? [] },
     { name: STEP_BUILD_PACKAGE, expectedCommand: ['npm', 'run', 'build'], authorizedKeyids: [], artifactRules: rules[STEP_BUILD_PACKAGE] ?? [] },
-    { name: STEP_RUNTIME_ENFORCEMENT, expectedCommand: ['node', '--import', '@capwall/runtime-node'], authorizedKeyids: [], artifactRules: rules[STEP_RUNTIME_ENFORCEMENT] ?? [] },
+    { name: STEP_RUNTIME_ENFORCEMENT, expectedCommand: ['node', '--import', '@extodan/capwall-runtime-node'], authorizedKeyids: [], artifactRules: rules[STEP_RUNTIME_ENFORCEMENT] ?? [] },
   ]
 }
 
@@ -175,7 +175,7 @@ export function scanStepStatement(report: ScanReport, materials: DigestMap, prod
 /** Statement for the runtime step, carrying the RBOM as byproduct/environment. */
 export function runtimeStepStatement(telemetry: RuntimeTelemetry, materials: DigestMap): Statement {
   return linkStatement(STEP_RUNTIME_ENFORCEMENT, {
-    command: ['node', '--import', '@capwall/runtime-node'],
+    command: ['node', '--import', '@extodan/capwall-runtime-node'],
     materials,
     products: {},
     byproducts: { rbom: rbomPredicate(telemetry) },

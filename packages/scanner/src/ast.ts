@@ -5,7 +5,7 @@ import {
   builtinCapabilities,
   normalizeSpecifier,
   type Capability,
-} from '@capwall/core'
+} from '@extodan/capwall-core'
 import { analyzeDataflow } from './dataflow.js'
 
 /** Heuristically-known HTTP client libraries — indirect network usage. */

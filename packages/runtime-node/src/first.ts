@@ -18,7 +18,7 @@ export interface FirstLoaderVerdict {
   reasons: string[]
 }
 
-const OUR_MARKERS = ['capwall', '@capwall/runtime-node']
+const OUR_MARKERS = ['capwall', '@extodan/capwall-runtime-node']
 
 function isOurs(value: string): boolean {
   return OUR_MARKERS.some((marker) => value.includes(marker))

@@ -4,8 +4,8 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import picocolors from 'picocolors'
-import { CAPABILITY_INFO, CAPABILITIES } from '@capwall/core'
-import { scanLocalTree } from '@capwall/scanner'
+import { CAPABILITY_INFO, CAPABILITIES } from '@extodan/capwall-core'
+import { scanLocalTree } from '@extodan/capwall-scanner'
 import {
   allowCapabilities,
   attestBuildLink,
@@ -80,7 +80,7 @@ program
 
 program
   .command('run')
-  .description('run a Node/npm process under the @capwall/runtime-node V8 hook')
+  .description('run a Node/npm process under the @extodan/capwall-runtime-node V8 hook')
   .argument('<cmd...>', 'command to run, e.g. -- node app.js')
   .option('--mode <mode>', 'enforce | audit (observe-only, nothing blocks)', 'enforce')
   .allowExcessArguments(true)

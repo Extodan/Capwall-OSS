@@ -15,9 +15,9 @@ import {
   type Capability,
   type LockFile,
   type ScanReport,
-} from '@capwall/core'
-import { scanLocalTree } from '@capwall/scanner'
-import { inspectToolDescription, pinToolsList } from '@capwall/agent-shield'
+} from '@extodan/capwall-core'
+import { scanLocalTree } from '@extodan/capwall-scanner'
+import { inspectToolDescription, pinToolsList } from '@extodan/capwall-agent-shield'
 import {
   createCapwallLayout,
   emitLink,
@@ -37,7 +37,7 @@ import {
   signEnvelope,
   type DigestMap,
   type Rwxi,
-} from '@capwall/attestation'
+} from '@extodan/capwall-attestation'
 import { generateKeyStore, loadKeyStore, saveKeyStore } from './keystore.js'
 
 export { CAPWALL_STEPS }
@@ -167,7 +167,7 @@ function validateCaps(caps: string[]): void {
 
 export function resolveRegisterPath(): string {
   const require = createRequire(import.meta.url)
-  return require.resolve('@capwall/runtime-node')
+  return require.resolve('@extodan/capwall-runtime-node')
 }
 
 export function runWithHook(cmd: string[], options: { mode?: 'enforce' | 'audit' } = {}): Promise<number> {
@@ -333,7 +333,7 @@ export function attestRuntimeLink(
   const envelope = emitLink(
     STEP_RUNTIME_ENFORCEMENT,
     {
-      command: ['node', '--import', '@capwall/runtime-node'],
+      command: ['node', '--import', '@extodan/capwall-runtime-node'],
       materials,
       products: {},
       byproducts: { rbom: rbomPredicate({
@@ -557,11 +557,11 @@ export async function wrapCommand(
   const cwd = options.cwd ?? process.cwd()
   const isMcp = options.agent === 'mcp'
   const runtimeRegister = resolveRegisterPath()
-  const agentPreload = createRequire(import.meta.url).resolve('@capwall/agent-shield/wrap-preload')
+  const agentPreload = createRequire(import.meta.url).resolve('@extodan/capwall-agent-shield/wrap-preload')
 
   if (isMcp) {
     // stdio MCP servers go through the intercepting proxy shim
-    const preload = createRequire(import.meta.url).resolve('@capwall/agent-shield/wrap-preload')
+    const preload = createRequire(import.meta.url).resolve('@extodan/capwall-agent-shield/wrap-preload')
     const shim = preload.replace('wrap-preload.mjs', 'mcp-shim.mjs')
     const pins = existsSync(join(cwd, '.capwall', 'mcp-pins.json'))
     const child = spawn(NODE_BIN, [shim, 'wrapped', '--', ...command], {

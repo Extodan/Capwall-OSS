@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { canonicalJson } from '@capwall/attestation'
+import { canonicalJson } from '@extodan/capwall-attestation'
 import { sanitizeInstructionText, sanitizeMcpToolsList } from './sanitizer.js'
 import { scoreTrustDesc, trainTrustDesc, TRUSTDESC_CORPUS, type TrustDescModel } from './trustdesc.js'
 

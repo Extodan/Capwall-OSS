@@ -1,5 +1,5 @@
 {
-  "name": "@capwall/core",
+  "name": "@extodan/capwall-core",
   "version": "0.1.0",
   "description": "Capability model, capabilities.lock schema, and risk scoring shared by Capwall scanner, runtime, CLI, API and web.",
   "type": "module",

@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { signEnvelope, verifyEnvelope, canonicalJson, type Envelope } from '@capwall/attestation'
-import type { KeyPair } from '@capwall/attestation'
+import { signEnvelope, verifyEnvelope, canonicalJson, type Envelope } from '@extodan/capwall-attestation'
+import type { KeyPair } from '@extodan/capwall-attestation'
 import type { TrajectoryChain, EvidentialDecision } from './trajectory.js'
 import type { EvidentialContract } from './policy.js'
 
