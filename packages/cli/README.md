@@ -1,22 +1,14 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/capwall-logo-dark.svg">
-    <img src="docs/capwall-logo-light.svg" alt="Capwall" width="360">
-  </picture>
-</p>
-<h3 align="center">your node_modules just lost root access</h3>
-
 # @extodan/capwall
+
+**your node_modules just lost root access**
 
 **Per-package runtime permissions for `node_modules` — and for the AI coding agents and MCP servers that touch them.**
 
-Every `npm install` pulls in packages you've never read. Any of them can read `process.env`, spawn shells, and open sockets — the exact powers behind every npm supply-chain attack. Capwall makes each one ask permission: **11 capabilities**, scanned statically, locked in a reviewed `capabilities.lock`, enforced fail-closed inside V8.
+Every `npm install` pulls in packages you've never read. Any of them can read `process.env`, spawn shells, and open sockets — the exact powers behind every npm supply-chain attack. Capwall makes each one ask permission: **12 capabilities**, scanned statically, locked in a reviewed `capabilities.lock`, enforced fail-closed inside V8.
 
 [![CI](https://github.com/Extodan/Capwall-OSS/actions/workflows/ci.yml/badge.svg)](https://github.com/Extodan/Capwall-OSS/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/v/@extodan/capwall)](https://www.npmjs.com/package/@extodan/capwall)
-
-<p align="center"><img src="docs/banner.svg" alt="blocked attack demo" width="90%"></p>
 
 ## Quickstart (60 seconds)
 
@@ -29,20 +21,6 @@ npx @extodan/capwall run -- node app.js   # enforce — unauthorized use throws,
 Or install it: `npm i -D @extodan/capwall` — then `capwall …` in your npm scripts.
 
 Production enforcement (one line, no CLI): `node --import @extodan/capwall-runtime-node app.js`
-
-## What a blocked attack looks like
-
-From the air-gapped exploit lab (`pnpm sim:demo` in the repo) — three benign reproductions of 2026 supply-chain attack patterns:
-
-```
-│ vector                                     │ standard node.js    │ capwall-protected     │
-│ legit stripe charge                        │ ALLOWED             │ ALLOWED (~µs)        │
-│ axios→plain-crypto-js (.env theft + exfil) │ PWNED — keys out    │ BLOCKED              │
-│ Shai-Hulud worm (SSH key read + raw TCP)   │ PWNED — key gone    │ BLOCKED              │
-│ rogue MCP (path traversal + shell spawn)   │ PWNED — shelled     │ BLOCKED              │
-└────────────────────────────────────────────┴─────────────────────┴──────────────────────┘
-RESULT: ALL VECTORS BLOCKED — legit traffic unaffected · attacker-sink: 2 hits vs 0
-```
 
 ## How it works
 
@@ -71,7 +49,7 @@ init [dir]                          write capabilities.lock (capabilities + impo
 verify [dir]                        lock vs tree drift; exit 1 (CI-ready)
 run [--mode=enforce|audit] -- <cmd> enforce; audit observes without blocking
 allow|deny <pkg> <cap…>             edit grants (deny-to-zero keeps a blocking entry)
-show · capabilities                 inspect the lock / list the 11 capabilities
+show · capabilities                 inspect the lock / list the 12 capabilities
 
 wrap [--agent=claude|cursor|codex|mcp] -- <cmd>   DIFC shield around agents/MCP/lifecycle
 mcp scan|lock <server> -- <cmd>      ITP audit + SHA-256 schema pinning

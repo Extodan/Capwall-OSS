@@ -11,7 +11,7 @@ The open-source engine behind [Capwall](https://github.com/Extodan/Capwall) —
 per-package runtime permissions for `node_modules`, AI agents, and MCP servers.
 
 > Your app imports 1,000+ packages you've never read. Capwall makes each one
-> ask permission: **11 capabilities** (`env.read`, `child_process`, `http.request`,
+> ask permission: **12 capabilities** (`env.read`, `child_process`, `http.request`,
 > `net.*`, `fs.*`, `dynamic-code`, …) scanned statically, locked in a reviewed
 > `capabilities.lock`, and enforced fail-closed inside V8 before userland runs.
 

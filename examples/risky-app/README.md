@@ -18,7 +18,7 @@ What you should see (43+ packages):
 | dynamic code | ~2 | ssh2, google-libphonenumber |
 | install scripts | 2 | esbuild, husky |
 
-Headliners: `ssh2` touches **9 of 11 capabilities** (sockets, DNS, env, fs,
+Headliners: `ssh2` touches **9 of 12 capabilities** (sockets, DNS, env, fs,
 shell, dynamic code — it's an SSH client, so that's *why*), `cross-spawn`
 and `esbuild` score 100. That's the pitch in one scan: none of this is
 malicious, all of it is *unreviewed*, and Capwall is how you make it explicit.

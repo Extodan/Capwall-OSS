@@ -3,7 +3,7 @@
 The shared brain: capability model, `capabilities.lock` schema, and the risk model.
 Consumed by scanner, runtime, CLI, API and web — zero runtime deps except zod.
 
-- `capabilities.ts` — the 11 capabilities, severity metadata, builtin→capability map
+- `capabilities.ts` — the 12 capabilities, severity metadata, builtin→capability map
 - `lockfile.ts` — `capabilities.lock` v1 (zod-validated; JSON schema in `schema/`), allow/deny mutations, `name@version` / bare-name lookup
 - `risk.ts` — transparent additive scoring (weights are data, surfaced in the dashboard)
 - `types.ts` — `ScanReport`, `PackageReport`, `ViolationEvent`, `ScanProgress`
