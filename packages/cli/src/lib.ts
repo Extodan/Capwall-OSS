@@ -18,6 +18,7 @@ import {
 } from '@extodan/capwall-core'
 import { scanLocalTree } from '@extodan/capwall-scanner'
 import { inspectToolDescription, pinToolsList } from '@extodan/capwall-agent-shield'
+type McpToolSpec2 = { name: string; description?: string; inputSchema?: unknown }
 import {
   createCapwallLayout,
   emitLink,
@@ -506,7 +507,11 @@ export interface McpScanReport {
 
 /** capwall mcp scan — MCP-ITP audit of a live tools/list response. */
 export function mcpScan(server: string, command: string[]): McpScanReport {
-  const { tools } = probeMcpToolsList(command)
+  // file form: `capwall mcp scan poisoned.json` — scan a saved tools/list document
+  const isFile = command.length === 1 && /\.json$/i.test(command[0] ?? '')
+  const tools = isFile
+    ? (JSON.parse(readFileSync(command[0]!, 'utf8')) as { tools: McpToolSpec2[] }).tools
+    : probeMcpToolsList(command).tools
   const pin = pinToolsList(tools)
   const findings = tools.map((tool) => {
     const verdict = inspectToolDescription(tool)
@@ -517,8 +522,11 @@ export function mcpScan(server: string, command: string[]): McpScanReport {
 
 /** capwall mcp lock — pin the tools/list digest into .capwall/mcp-pins.json. */
 export function mcpLock(server: string, command: string[], cwd = process.cwd()): { pin: string; path: string } {
-  const { tools } = probeMcpToolsList(command)
-  const pin = pinToolsList(tools)
+  const isFile = command.length === 1 && /\.json$/i.test(command[0] ?? '')
+  const tools = isFile
+    ? (JSON.parse(readFileSync(command[0]!, 'utf8')) as { tools: McpToolSpec2[] }).tools
+    : probeMcpToolsList(command).tools
+  const pin = pinToolsList(tools as never)
   const dir = join(cwd, '.capwall')
   mkdirSync(dir, { recursive: true })
   const pinsPath = join(dir, 'mcp-pins.json')

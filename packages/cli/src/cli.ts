@@ -253,13 +253,13 @@ program
 const mcpCmd = program.command('mcp').description('MCP server security (MCP-ITP / rug-pull)')
 mcpCmd
   .command('scan')
-  .description("audit a live MCP server's tools/list for implicit tool poisoning")
+  .description("audit a live MCP server's tools/list (or a saved tools.json file) for implicit tool poisoning")
   .argument('<server>')
-  .argument('<cmd...>', 'server command, e.g. -- node server.js')
+  .argument('[cmd...]', 'server command (or a single tools/list .json file path)')
   .allowExcessArguments(true)
   .enablePositionalOptions()
   .action((server: string, cmd: string[]) => {
-    const report = mcpScan(server, cmd)
+    const report = mcpScan(server, cmd.length ? cmd : [server])
     console.log(`\n  ${picocolors.bold(report.server)} — ${report.toolCount} tool(s) · pin ${report.pin.slice(0, 16)}…`)
     if (report.clean) {
       console.log(picocolors.green('  ✔ no implicit-tool-poisoning findings'))
@@ -275,11 +275,11 @@ mcpCmd
   .command('lock')
   .description('pin the tools/list schema digest (blocks rug-pull drift)')
   .argument('<server>')
-  .argument('<cmd...>', 'server command, e.g. -- node server.js')
+  .argument('[cmd...]', 'server command (or a single tools/list .json file path)')
   .allowExcessArguments(true)
   .enablePositionalOptions()
   .action((server: string, cmd: string[]) => {
-    const { pin, path } = mcpLock(server, cmd)
+    const { pin, path } = mcpLock(server, cmd.length ? cmd : [server])
     console.log(picocolors.green(`  ✔ pinned ${server} → ${pin.slice(0, 24)}… (${path})`))
   })
 

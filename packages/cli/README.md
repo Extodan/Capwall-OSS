@@ -52,6 +52,17 @@ RESULT: ALL VECTORS BLOCKED — legit traffic unaffected · attacker-sink: 2 hit
 4. **Attest** (`attest`) — every pipeline step emits Ed25519-signed in-toto/DSSE envelopes; `attest verify` proves the enforced lock is bit-identical to the scanned one.
 5. **Agents too** (`wrap`, `mcp`, `taint`) — a two-axis taint lattice for AI agents, MCP `tools/list` schema pinning against rug-pulls, and implicit-tool-poisoning detection.
 
+## Scoped grants (argument predicates)
+
+```json
+"stripe-sdk@12.0.0": {
+  "capabilities": ["env.read", "http.request"],
+  "scopes": { "env": ["STRIPE_KEY"], "hosts": ["api.stripe.com"] }
+}
+```
+
+`process.env.ANYTHING_ELSE` and `fetch("https://evil.example")` are blocked exactly like ungranted capabilities (allowed hosts include subdomains). Combine with the 12th gate — `hardening.importGraph: "strict"` — and packages may only import their own declared dependencies.
+
 ## Command reference
 
 ```

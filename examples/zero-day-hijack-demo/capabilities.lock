@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "defaults": {
+    "unrecognized": "warn"
+  },
+  "hardening": {
+    "freezePrototypes": true,
+    "importGraph": "strict"
+  },
+  "packages": {
+    "evil-color-logger@3.1.4": {
+      "capabilities": [],
+      "notes": "explicitly revoked"
+    }
+  }
+}

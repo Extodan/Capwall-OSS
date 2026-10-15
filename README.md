@@ -21,6 +21,23 @@ npx @extodan/capwall run -- node dist/server.js   # enforce: unauthorized .env/n
 npx @extodan/capwall wrap -- claude        # AI agents + MCP under the DIFC reference monitor
 ```
 
+Why does a string-padding package have permission to read your `STRIPE_SECRET_KEY`?
+**72.9% of npm packages require zero system capabilities** (Xu & Møller, ASE 2026) —
+yet 100% of them run with full ambient authority. Capwall fixes the mismatch.
+
+See it stop five real attack vectors in one command:
+
+```bash
+npm run demo:attack   # from the repo root: hijacked dep + poisoned MCP tools, all BLOCKED
+```
+
+| module | ground truth |
+|---|---|
+| `runtime-node` enforcement | **Mir** RWXi (MIT CSAIL) · **GHunter** gadgets (USENIX'24) · **NodeShield** import edges (CCS'25) |
+| `scanner` dataflow | **Defensive Capability Analysis** (ASE'26) |
+| `agent-shield` | Runtime Contracts (arXiv:2608.11274) · **VIGIL/AgentSpec** · **MCP-ITP** · **FIDES**/SPA |
+| `attestation` | **in-toto** (USENIX'19) + DSSE · zkSBOM commitments
+
 ## This repository
 
 | package | role |

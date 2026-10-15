@@ -4,8 +4,11 @@
   "private": true,
   "description": "One command. Four real attack vectors. Watch a hijacked dependency get walled.",
   "scripts": {
-    "test:attack": "node run.js attack",
-    "test:capwall": "node run.js capwall"
+    "demo:attack": "node run.js",
+    "test:capwall": "node run.js",
+    "test:attack": "node run.js"
   },
-  "dependencies": { "evil-color-logger": "file:./node_modules/evil-color-logger" }
+  "dependencies": {
+    "evil-color-logger": "file:./node_modules/evil-color-logger"
+  }
 }

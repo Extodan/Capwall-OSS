@@ -60,9 +60,15 @@ export function printScanReport(report: ScanReport, verbose = false): void {
 }
 
 export function printCapabilityLegend(): void {
-  console.log(`\n  ${picocolors.bold('Capabilities')}`)
+  console.log(`\n  ${picocolors.bold('Capabilities (11) — the [R][W][X][i] gates')}`)
   for (const [cap, info] of Object.entries(CAPABILITY_INFO)) {
     console.log(`    ${picocolors.cyan(cap.padEnd(16))} ${info.label}${picocolors.dim(` — ${info.description}`)}`)
   }
+  console.log(`\n  ${picocolors.bold('The 12th gate — [i] import edge (NodeShield)')}`)
+  console.log(`    ${picocolors.cyan('import-graph'.padEnd(16))} a package may only require() its own declared dependencies`)
+  console.log(picocolors.dim('     enable: capabilities.lock → hardening.importGraph: "strict" (or CAPWALL_IMPORT_GRAPH=strict)'))
+  console.log(`\n  ${picocolors.bold('Scoped predicates (argument-level grants)')}`)
+  console.log(picocolors.dim('     "scopes": { "env": ["LOG_LEVEL"], "hosts": ["api.stripe.com"] }'))
+  console.log(picocolors.dim('     env.read then covers ONLY those vars; http.request ONLY those hosts (+subdomains).'))
   console.log()
 }

@@ -1,13 +1,15 @@
 # zero-day-hijack-demo — one command, four attacks, one wall
 
-A "color logger" dependency that got hijacked. It steals your `.env`, plants a
-prototype-pollution gadget, exfiltrates over HTTP behind a `setTimeout`, and
-shells out laterally. Nothing destructive; everything realistic.
+A "color logger" dependency that got hijacked — plus a poisoned MCP tools
+document. Five real-world vectors, nothing destructive, everything realistic:
+direct `.env` theft, async-context evasion (`setTimeout` → fetch exfil), a
+GHunter prototype-pollution gadget, a NodeShield lateral `child_process`
+import, and an MCP-ITP `~/.ssh` coercion payload.
 
 ```bash
 cd examples/zero-day-hijack-demo
-npm run test:capwall     # generates a zero-trust lock, then runs UNDER capwall
-npm run test:attack      # the same app with no protection, for contrast
+npm run demo:attack      # both runs + the 5-vector verdict table
+                         # (uses the published CLI via npx — no clone needed)
 ```
 
 Under capwall every vector dies at the module boundary with
@@ -18,3 +20,6 @@ the published CLI (`npx @extodan/capwall`), no clone required.
 Scoped grants (predicates) are the follow-up: grant the logger
 `env: ["LOG_LEVEL"]` and `hosts: ["logs.internal"]` in its `scopes` and it can
 touch exactly those, nothing else.
+
+`demo.tape` renders this exact command to `docs/demo.gif` with Charmbracelet
+[vhs](https://github.com/charmbracelet/vhs): `vhs demo.tape`.
