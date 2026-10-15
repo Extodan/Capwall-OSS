@@ -5,7 +5,7 @@
   <text x="56" y="128" fill="#f4f4f0" font-size="22">your node_modules just lost root access.</text>
   <text x="56" y="186" fill="#4b4e57" font-size="15">$ npx @extodan/capwall init</text>
   <text x="56" y="210" fill="#4b4e57" font-size="15">$ npx @extodan/capwall run -- node app.js</text>
-  <text x="56" y="238" fill="#e5341d" font-size="15">⛔ BLOCKED evil-left-pad → child_process</text>
+  <text x="56" y="238" fill="#e5341d" font-size="15">BLOCKED evil-left-pad → child_process</text>
   <g font-size="13">
     <rect x="880" y="60" width="120" height="26" fill="none" stroke="#e5341d"/><text x="892" y="78" fill="#e5341d">env.read</text>
     <rect x="880" y="96" width="120" height="26" fill="none" stroke="#e5341d"/><text x="892" y="114" fill="#e5341d">child_process</text>

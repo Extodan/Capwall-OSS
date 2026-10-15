@@ -36,12 +36,12 @@ From the air-gapped exploit lab (`pnpm sim:demo` in the repo) — three benign r
 
 ```
 │ vector                                     │ standard node.js    │ capwall-protected     │
-│ legit stripe charge                        │ 🟢 ALLOWED          │ 🟢 ALLOWED (~µs)     │
-│ axios→plain-crypto-js (.env theft + exfil) │ 🔴 PWNED — keys out │ 🛡️ BLOCKED           │
-│ Shai-Hulud worm (SSH key read + raw TCP)   │ 🔴 PWNED — key gone │ 🛡️ BLOCKED           │
-│ rogue MCP (path traversal + shell spawn)   │ 🔴 PWNED — shelled  │ 🛡️ BLOCKED           │
+│ legit stripe charge                        │ ALLOWED             │ ALLOWED (~µs)        │
+│ axios→plain-crypto-js (.env theft + exfil) │ PWNED — keys out    │ BLOCKED              │
+│ Shai-Hulud worm (SSH key read + raw TCP)   │ PWNED — key gone    │ BLOCKED              │
+│ rogue MCP (path traversal + shell spawn)   │ PWNED — shelled     │ BLOCKED              │
 └────────────────────────────────────────────┴─────────────────────┴──────────────────────┘
-✅ ALL VECTORS BLOCKED — legit traffic unaffected · attacker-sink: 2 hits vs 0
+RESULT: ALL VECTORS BLOCKED — legit traffic unaffected · attacker-sink: 2 hits vs 0
 ```
 
 ## How it works
