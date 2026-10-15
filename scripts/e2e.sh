@@ -83,6 +83,9 @@ cp "$OUT/lock.bak" capabilities.lock
 rm -rf .capwall capabilities.lock root.layout
 popd >/dev/null
 
+# The cloud control plane (apps/api) is private — skip this section in the
+# open-source repo where it does not exist.
+if [ -d "$ROOT/apps/api" ]; then
 echo "── API (real npm registry)"
 API_PORT=3459
 API_LOG=$(mktemp)
@@ -122,6 +125,7 @@ contains "events feed lists violations" "$OUT/events.json" "silly-string"
 
 lsof -ti:$API_PORT | xargs kill -9 2>/dev/null || true
 rm -rf "$DATA_DIR" "$OUT" "$API_LOG"
+fi
 
 echo
 echo "e2e result: $PASS passed, $FAIL failed"
