@@ -1,6 +1,6 @@
 {
   "name": "@extodan/capwall-agent-shield",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "AI Agent & MCP Runtime Shield \u2014 dual-faced runtime contract harness, trajectory hash-chain, two-axis DIFC taint lattice, SKILL.md/MCP sanitizer.",
   "type": "module",
   "license": "Apache-2.0",
