@@ -1,0 +1,20 @@
+# .github/workflows/capwall.yml
+# Posts a capability diff comment on every PR that changes dependencies.
+# Free for public repos. Set fail-on-new-capabilities: true for merge gating.
+name: capwall
+on: [pull_request]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  capability-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: Extodan/Capwall-OSS/.github/actions/capwall-diff@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-new-capabilities: false  # set true to block merges
