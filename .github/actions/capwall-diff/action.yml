@@ -27,14 +27,14 @@ runs:
         git fetch origin ${{ inputs.base }} --depth=1
         git worktree add /tmp/base origin/${{ inputs.base }}
         cd /tmp/base
-        npm ci --ignore-scripts 2>/dev/null || true
+        npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts --no-audit --no-fund 2>/dev/null || true
         capwall init 2>/dev/null || echo '{}' > capabilities.lock
         cp capabilities.lock /tmp/base-lock.json
 
     - name: Scan PR branch
       shell: bash
       run: |
-        npm ci --ignore-scripts 2>/dev/null || true
+        npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts --no-audit --no-fund 2>/dev/null || true
         capwall init 2>/dev/null || echo '{}' > capabilities.lock
         cp capabilities.lock /tmp/head-lock.json
 
