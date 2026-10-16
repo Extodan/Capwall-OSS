@@ -42,7 +42,7 @@ runs:
       id: diff
       shell: bash
       run: |
-        DIFF=$(capwall diff --base /tmp/base-lock.json --head /tmp/head-lock.json)
+        DIFF=$(capwall diff --base /tmp/base-lock.json --head /tmp/head-lock.json) || true
         echo "diff<<EOF" >> $GITHUB_OUTPUT
         echo "$DIFF" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
