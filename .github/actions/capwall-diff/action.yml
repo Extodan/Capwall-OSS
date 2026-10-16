@@ -60,8 +60,8 @@ runs:
           const diff = `${{ steps.diff.outputs.diff }}`;
           const hasNew = `${{ steps.diff.outputs.has_new }}` === 'true';
           const body = hasNew
-            ? `## ⛔ Capwall: new permissions requested\n\n${diff}\n\n---\n*Checked by [Capwall](https://github.com/Extodan/Capwall-OSS) · review permissions, not just code.*`
-            : `## ✅ Capwall: no capability changes\n\n${diff}\n\n---\n*[Checked by Capwall](https://capwall.extodan.com)*`;
+            ? `## Capwall: new permissions requested\n\n${diff}\n\n---\n*Checked by [Capwall](https://capwall.extodan.com) · review permissions, not just code.*`
+            : `## Capwall: no capability changes\n\n${diff}\n\n---\n*Checked by [Capwall](https://capwall.extodan.com)*`;
 
           // Find and update existing comment
           const { data: comments } = await github.rest.issues.listComments({
@@ -69,7 +69,7 @@ runs:
             repo: context.repo.repo,
             issue_number: context.issue.number,
           });
-          const existing = comments.find(c => c.body.includes('Checked by [Capwall]'));
+          const existing = comments.find(c => c.body.includes('Checked by'));
           if (existing) {
             await github.rest.issues.updateComment({
               owner: context.repo.owner,

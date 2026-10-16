@@ -1,6 +1,6 @@
 {
   "name": "@extodan/capwall",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "capwall \u2014 capability firewall for npm dependencies: scan, lock, enforce, attest.",
   "type": "module",
   "license": "Apache-2.0",
