@@ -63,13 +63,13 @@ runs:
             ? `## Capwall: new permissions requested\n\n${diff}\n\n---\n*Checked by [Capwall](https://capwall.extodan.com) · review permissions, not just code.*`
             : `## Capwall: no capability changes\n\n${diff}\n\n---\n*Checked by [Capwall](https://capwall.extodan.com)*`;
 
-          // Find and update existing comment
+          // Find and update our own comment only (never touch the GitHub App bot's comment)
           const { data: comments } = await github.rest.issues.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: context.issue.number,
           });
-          const existing = comments.find(c => c.body.includes('Checked by'));
+          const existing = comments.find(c => c.user?.login === 'github-actions[bot]' && c.body.includes('Checked by'));
           if (existing) {
             await github.rest.issues.updateComment({
               owner: context.repo.owner,
