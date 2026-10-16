@@ -61,7 +61,7 @@ runs:
           const hasNew = `${{ steps.diff.outputs.has_new }}` === 'true';
           const body = hasNew
             ? `## ⛔ Capwall: new permissions requested\n\n${diff}\n\n---\n*Checked by [Capwall](https://github.com/Extodan/Capwall-OSS) · review permissions, not just code.*`
-            : `## ✅ Capwall: no capability changes\n\n${diff}\n\n---\n*Checked by [Capwall](https://github.com/Extodan/Capwall-OSS)*`;
+            : `## ✅ Capwall: no capability changes\n\n${diff}\n\n---\n*[Checked by Capwall](https://capwall.extodan.com)*`;
 
           // Find and update existing comment
           const { data: comments } = await github.rest.issues.listComments({
