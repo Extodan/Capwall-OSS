@@ -9,6 +9,8 @@
     "test:attack": "node run.js"
   },
   "dependencies": {
-    "evil-color-logger": "file:./node_modules/evil-color-logger"
+    "evil-color-logger": "file:./node_modules/evil-color-logger",
+    "event-stream": "^4.0.1",
+    "colors": "^1.4.0"
   }
 }
